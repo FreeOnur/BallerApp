@@ -14,7 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  bool _isPasswordHidden = true; // <<< neu
+  bool _isPasswordHidden = true;
 
   void login() async {
     final email = _emailController.text;
@@ -46,6 +46,14 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Text(
+                'BallerUp',
+                style: TextStyle(
+                  color: Color.fromRGBO(231, 85, 39, 100),
+                  fontSize: 80,
+                  fontWeight: FontWeight.bold                  
+                ),
+              ),
               LayoutBuilder(
                 builder: (context, constraints) {
                   double logoSize = constraints.maxWidth*0.45;
