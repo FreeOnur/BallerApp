@@ -24,11 +24,13 @@ class _LoginPageState extends State<LoginPage> {
       await authService.signInWithEmailPassword(email, password);
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Error: $e")));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Error: $e")));
       }
     }
   }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -47,22 +49,22 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'BallerUp',
+                'BallUp',
                 style: TextStyle(
                   color: Color.fromRGBO(231, 85, 39, 100),
                   fontSize: 80,
-                  fontWeight: FontWeight.bold                  
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               LayoutBuilder(
                 builder: (context, constraints) {
-                  double logoSize = constraints.maxWidth*0.45;
+                  double logoSize = constraints.maxWidth * 0.45;
                   return Icon(
                     Icons.sports_basketball_rounded,
                     size: logoSize,
-                    color: const Color.fromRGBO(231, 85, 39, 100)
+                    color: const Color.fromRGBO(231, 85, 39, 100),
                   );
-                }
+                },
               ),
               Form(
                 key: _formKey,
@@ -81,7 +83,8 @@ class _LoginPageState extends State<LoginPage> {
                           labelStyle: const TextStyle(fontSize: 20),
                           focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
-                                color: Color.fromRGBO(231, 85, 39, 100)),
+                              color: Color.fromRGBO(231, 85, 39, 100),
+                            ),
                           ),
                           floatingLabelStyle: const TextStyle(
                             color: Color.fromRGBO(231, 85, 39, 100),
@@ -98,9 +101,9 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                       ),
-              
+
                       SizedBox(height: screenHeight * 0.02),
-              
+
                       // --- Password Field ---
                       TextFormField(
                         style: const TextStyle(color: Colors.white),
@@ -112,7 +115,8 @@ class _LoginPageState extends State<LoginPage> {
                           labelStyle: const TextStyle(fontSize: 20),
                           focusedBorder: const UnderlineInputBorder(
                             borderSide: BorderSide(
-                                color: Color.fromRGBO(231, 85, 39, 100)),
+                              color: Color.fromRGBO(231, 85, 39, 100),
+                            ),
                           ),
                           floatingLabelStyle: const TextStyle(
                             color: Color.fromRGBO(231, 85, 39, 100),
@@ -140,9 +144,9 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                       ),
-              
+
                       SizedBox(height: screenHeight * 0.05),
-              
+
                       // --- Login Button ---
                       SizedBox(
                         width: double.infinity,
@@ -150,10 +154,15 @@ class _LoginPageState extends State<LoginPage> {
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.white,
-                            backgroundColor:
-                                const Color.fromRGBO(231, 85, 39, 100),
+                            backgroundColor: const Color.fromRGBO(
+                              231,
+                              85,
+                              39,
+                              100,
+                            ),
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
@@ -165,12 +174,13 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text(
                               'Log in',
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: screenHeight * 0.03),
+                                fontWeight: FontWeight.bold,
+                                fontSize: screenHeight * 0.03,
+                              ),
                             ),
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
