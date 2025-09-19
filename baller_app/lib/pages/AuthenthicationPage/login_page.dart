@@ -181,6 +181,31 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ),
+                      SizedBox(height: screenHeight * 0.02),
+                      GestureDetector(
+                        onTap: () {
+                          // Handle forgot password action
+                        },
+                        child: Text(
+                          "Forgot your password?",
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: screenHeight * 0.02,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      // --- Sign Up Link ---
+                      GestureDetector(
+                        onTap: () {},
+                        child: Text(
+                          "Don't have an account? Sign Up",
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: screenHeight * 0.02,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

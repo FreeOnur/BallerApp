@@ -10,7 +10,7 @@ authenticated -> Profile Page
 */
 
 import 'package:baller_app/pages/home_page.dart';
-import 'package:baller_app/pages/login_page.dart';
+import 'package:baller_app/pages/AuthenthicationPage/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
