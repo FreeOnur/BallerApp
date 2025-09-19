@@ -1,4 +1,5 @@
 import 'package:baller_app/auth/auth_service.dart';
+import 'package:baller_app/pages/AuthenthicationPage/Register/register_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -197,7 +198,14 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: screenHeight * 0.02),
                       // --- Sign Up Link ---
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:(context) => 
+                              RegisterPage()
+                            ));
+                        },
                         child: Text(
                           "Don't have an account? Sign Up",
                           style: TextStyle(
