@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                       TextFormField(
                         style: const TextStyle(color: Colors.white),
                         controller: _passwordController,
-                        obscureText: _isPasswordHidden, // <<< wichtig
+                        obscureText: _isPasswordHidden, 
                         decoration: InputDecoration(
                           border: const UnderlineInputBorder(),
                           labelText: 'Password',
@@ -126,9 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                           // <<< Toggle Icon
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _isPasswordHidden
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
+                              _isPasswordHidden ? Icons.visibility_off : Icons.visibility,
                               color: Colors.grey,
                             ),
                             onPressed: () {
