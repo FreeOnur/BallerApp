@@ -1,4 +1,5 @@
 import 'package:baller_app/auth/auth_service.dart';
+import 'package:baller_app/pages/AuthenthicationPage/Register/profile_creation_page.dart';
 import 'package:baller_app/pages/AuthenthicationPage/login_page.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +30,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
     try {
       await authService.signUp(email, password);
-      Navigator.pop(context);
+      if(mounted) {
+        Navigator.pushReplacement(
+          context, 
+          MaterialPageRoute(builder: (context) => const ProfileCreationPage(),),
+        );
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error $e")));

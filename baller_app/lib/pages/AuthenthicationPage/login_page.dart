@@ -1,5 +1,6 @@
 import 'package:baller_app/auth/auth_service.dart';
 import 'package:baller_app/pages/AuthenthicationPage/Register/register_page.dart';
+import 'package:baller_app/pages/AuthenthicationPage/ResetPassword/password_forgot_page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -183,7 +184,12 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(height: screenHeight * 0.02),
                       GestureDetector(
                         onTap: () {
-                          // Handle forgot password action
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ForgotPasswordPage(),
+                            )
+                          );
                         },
                         child: Text(
                           "Forgot your password?",
