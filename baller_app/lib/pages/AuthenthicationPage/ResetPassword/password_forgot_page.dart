@@ -31,97 +31,109 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             children: [
               TextFormField(
                 textInputAction: TextInputAction.next,
-                  style: const TextStyle(color: Colors.white),
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    border: const UnderlineInputBorder(),
-                    labelText: 'Email',
-                    labelStyle: const TextStyle(fontSize: 20),
-                    focusedBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Color.fromRGBO(231, 85, 39, 100),
-                      ),
-                    ),
-                    floatingLabelStyle: const TextStyle(
+                style: const TextStyle(color: Colors.white),
+                controller: _emailController,
+                decoration: InputDecoration(
+                  border: const UnderlineInputBorder(),
+                  labelText: 'Email',
+                  labelStyle: const TextStyle(fontSize: 20),
+                  focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(
                       color: Color.fromRGBO(231, 85, 39, 100),
-                      fontSize: 20,
                     ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your email';
-                    }
-                    if (!value.contains('@')) {
-                      return 'Enter a valid email';
-                    }
-                    return null;
-                  },
+                  floatingLabelStyle: const TextStyle(
+                    color: Color.fromRGBO(231, 85, 39, 100),
+                    fontSize: 20,
+                  ),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your email';
+                  }
+                  if (!value.contains('@')) {
+                    return 'Enter a valid email';
+                  }
+                  return null;
+                },
+              ),
 
-                SizedBox(height: screenHeight * 0.02),
-                SizedBox(
-                  width: double.infinity,
-                  height: screenHeight * 0.09,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: const Color.fromRGBO(
-                        231,
-                        85,
-                        39,
-                        100,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+              SizedBox(height: screenHeight * 0.02),
+              SizedBox(
+                width: double.infinity,
+                height: screenHeight * 0.09,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color.fromRGBO(231, 85, 39, 100),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    onPressed: () async {
-                      if (_formkey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            content: Container(
-                              child: const Text(
+                  ),
+                  onPressed: () async {
+                    if (_formkey.currentState!.validate()) {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
                                 "Please check your email & spam directory for the token, if it's not in the Mailbox",
                                 textAlign: TextAlign.center,
                               ),
-                            )
-                          )
-                        );
-                        await supabase.auth.resetPasswordForEmail(_emailController.text);
-                      } else {
-                        null;
-                      }
-                    },
-                    child: Center(
-                      child: Text(
-                        'Reset Password',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: screenHeight * 0.03,
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ResetPasswordPage(),
+                                    ),
+                                  );
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
                         ),
+                      );
+                      await supabase.auth.resetPasswordForEmail(
+                        _emailController.text,
+                      );
+                    } else {
+                      null;
+                    }
+                  },
+                  child: Center(
+                    child: Text(
+                      'Reset Password',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: screenHeight * 0.03,
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: screenHeight * 0.02),
-                TextButton(
-                  onPressed: () async {
-                    Navigator.push(
-                     context,
-                     MaterialPageRoute(
+              ),
+              SizedBox(height: screenHeight * 0.02),
+              TextButton(
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
                       builder: (context) => const ResetPasswordPage(),
-                      )
-                    );
-                  },
-                  child: Text(
-                    'Do you already have a Token? Reset your Password',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: screenHeight * 0.02,
-                    ),                  
-                  )
-                )
+                    ),
+                  );
+                },
+                child: Text(
+                  'Do you already have a Token? Reset your Password',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: screenHeight * 0.02,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
