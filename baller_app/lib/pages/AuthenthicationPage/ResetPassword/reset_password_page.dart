@@ -135,9 +135,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   // <<< Toggle Icon
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isPasswordHidden
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      _isPasswordHidden ? Icons.visibility_off : Icons.visibility,
                       color: Colors.grey,
                     ),
                     onPressed: () {
