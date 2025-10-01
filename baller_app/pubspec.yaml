@@ -11,6 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^1.2.0
+  http: ^1.5.0
+  dio: ^5.9.0
 
 dev_dependencies:
   flutter_test:
