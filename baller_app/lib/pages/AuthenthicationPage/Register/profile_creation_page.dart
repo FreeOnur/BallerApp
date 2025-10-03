@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:baller_app/services/badword_filter.dart';
 import 'package:baller_app/widgets/profile_creation/avatar.dart';
+import 'package:baller_app/widgets/text_fields/text_form_field_custom';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,6 +18,8 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
   File? _imageFile;
   final _formkey = GlobalKey<FormState>();
   String? _imageUrl;
+  bool _loadingBadWords = false;
+
 
   final usernameController = TextEditingController();
   int? selectedAge;
@@ -54,8 +56,14 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
             _imageUrl = data['avatar_url'] as String?;
           });
         });
+      _loadBadWords();
   }
-
+  Future<void> _loadBadWords() async {
+    setState(() => _loadingBadWords = true);
+    await BadwordFilter.loadWords();
+    setState(() => _loadingBadWords = false);
+    print('✅ Bad words geladen!');
+  }
   @override
   void dispose() {
     super.dispose();
@@ -110,40 +118,7 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
               key: _formkey,
               child: Column(
                 children: [
-                  SizedBox(
-                    width: screenwidth * 0.9,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: TextFormField(
-                        textInputAction: TextInputAction.next,
-                        controller: usernameController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          border: const UnderlineInputBorder(),
-                          labelText: 'Username',
-                          labelStyle: const TextStyle(fontSize: 20),
-                          focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color.fromRGBO(231, 85, 39, 100),
-                            ),
-                          ),
-                          floatingLabelStyle: const TextStyle(
-                            color: Color.fromRGBO(231, 85, 39, 100),
-                            fontSize: 20,
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a username';
-                          }
-                          if (BadwordFilter.containsBadWord(value)) {
-                            return 'Username contains inappropriate language';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ),
+                  TextFormFieldCustom(screenwidth: screenwidth, usernameController: usernameController, labelTextCustom: 'Username',),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -158,15 +133,23 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
                                 color: Color.fromRGBO(231, 85, 39, 100),
                               ),
                             ),
+                            floatingLabelStyle: const TextStyle(
+                              color: Color.fromRGBO(231, 85, 39, 100),
+                              fontSize: 20,
+                            ),
                           ),
+                          dropdownColor: const Color.fromARGB(100, 39, 39, 39),
                           initialValue: selectedAge,
                           items: [
                             for (int age = 0; age <= 100; age++)
                               DropdownMenuItem<int>(
                                 value: age,
-                                child: Text(
-                                  age.toString(),
-                                  style: const TextStyle(color: Colors.white),
+                                child: Opacity(
+                                  opacity: 1.0,
+                                  child: Text(
+                                    age.toString(),
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                           ],
@@ -218,3 +201,4 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
     );
   }
 }
+

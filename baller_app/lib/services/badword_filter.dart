@@ -1,14 +1,18 @@
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class BadwordFilter {
-  static Set<String> _badWords = {};
+  static RegExp? _badWordRegExp;
 
   static Future<void> loadWords() async {
-    final raw = await rootBundle.loadString('/lib/assets/badwords.txt');
-    _badWords = raw.split('\n').map((word) => word.trim().toLowerCase()).toSet();
+    final raw = await rootBundle.loadString('assets/badwords.txt');
+    final words = raw.split('\n').map((word) => RegExp.escape(word.trim().toLowerCase())).where((word) => word.isNotEmpty).toList();
+
+    final pattern = r'\b(' + words.join('|') + r')\b';
+    _badWordRegExp = RegExp(pattern, caseSensitive: false);
   }
+
   static bool containsBadWord(String text) {
-    final lowerInput = text.toLowerCase();
-    return _badWords.any((badWord) => lowerInput.contains(badWord));
+    if(_badWordRegExp == null) return false;
+    return _badWordRegExp!.hasMatch(text.toLowerCase());
   }
 }
