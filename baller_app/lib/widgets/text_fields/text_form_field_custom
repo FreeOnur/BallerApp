@@ -1,0 +1,54 @@
+import 'package:flutter/material.dart';
+import 'package:baller_app/services/badword_filter.dart';
+
+class TextFormFieldCustom extends StatelessWidget {
+  
+  const TextFormFieldCustom({
+    super.key,
+    required this.screenwidth,
+    required this.usernameController,
+    required this.labelTextCustom
+  });
+  final String? labelTextCustom;
+  final double screenwidth;
+  final TextEditingController usernameController;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: screenwidth * 0.9,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: TextFormField(
+          textInputAction: TextInputAction.next,
+          controller: usernameController,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            border: const UnderlineInputBorder(),
+            labelText: labelTextCustom,
+            labelStyle: const TextStyle(fontSize: 20),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: Color.fromRGBO(231, 85, 39, 100),
+              ),
+            ),
+            floatingLabelStyle: const TextStyle(
+              color: Color.fromRGBO(231, 85, 39, 100),
+              fontSize: 20,
+            ),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter a username';
+            }
+            if (BadwordFilter.containsBadWord(value)) {
+              return 'Username contains inappropriate language';
+            }
+            
+            return null;
+          },
+        ),
+      ),
+    );
+  }
+}
