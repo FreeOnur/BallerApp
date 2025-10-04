@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:baller_app/auth/auth_service.dart';
 import 'package:baller_app/pages/home_page.dart';
-import 'package:baller_app/services/badword_filter.dart';
 import 'package:baller_app/widgets/profile_creation/avatar.dart';
 import 'package:baller_app/widgets/text_fields/drop_down_field_custom.dart';
 import 'package:baller_app/widgets/text_fields/text_form_field_custom';
@@ -21,7 +20,6 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
   File? _imageFile;
   final _formkey = GlobalKey<FormState>();
   String? _imageUrl;
-  bool _loadingBadWords = false;
   final authService = AuthService();
 
   final usernameController = TextEditingController();
