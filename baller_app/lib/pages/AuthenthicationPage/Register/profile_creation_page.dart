@@ -1,14 +1,9 @@
 import 'dart:io';
-<<<<<<< HEAD
 import 'package:baller_app/auth/auth_service.dart';
 import 'package:baller_app/pages/home_page.dart';
 import 'package:baller_app/services/badword_filter.dart';
 import 'package:baller_app/widgets/profile_creation/avatar.dart';
 import 'package:baller_app/widgets/text_fields/drop_down_field_custom.dart';
-=======
-import 'package:baller_app/services/badword_filter.dart';
-import 'package:baller_app/widgets/profile_creation/avatar.dart';
->>>>>>> 57071972e109ef32e3450b22982bd4c8245462b9
 import 'package:baller_app/widgets/text_fields/text_form_field_custom';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,11 +22,7 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
   final _formkey = GlobalKey<FormState>();
   String? _imageUrl;
   bool _loadingBadWords = false;
-<<<<<<< HEAD
   final authService = AuthService();
-=======
-
->>>>>>> 57071972e109ef32e3450b22982bd4c8245462b9
 
   final usernameController = TextEditingController();
   int? selectedAge;
@@ -128,13 +119,6 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
             _imageUrl = data['avatar_url'] as String?;
           });
         });
-      _loadBadWords();
-  }
-  Future<void> _loadBadWords() async {
-    setState(() => _loadingBadWords = true);
-    await BadwordFilter.loadWords();
-    setState(() => _loadingBadWords = false);
-    print('✅ Bad words geladen!');
   }
   @override
   void dispose() {
@@ -193,15 +177,11 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
               key: _formkey,
               child: Column(
                 children: [
-<<<<<<< HEAD
                   TextFormFieldCustom(
                     screenwidth: screenwidth,
                     usernameController: usernameController,
                     labelTextCustom: 'Username',
                   ),
-=======
-                  TextFormFieldCustom(screenwidth: screenwidth, usernameController: usernameController, labelTextCustom: 'Username',),
->>>>>>> 57071972e109ef32e3450b22982bd4c8245462b9
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -221,11 +201,7 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
                               fontSize: 20,
                             ),
                           ),
-<<<<<<< HEAD
                           dropdownColor: const Color.fromARGB(255, 39, 39, 39),
-=======
-                          dropdownColor: const Color.fromARGB(100, 39, 39, 39),
->>>>>>> 57071972e109ef32e3450b22982bd4c8245462b9
                           initialValue: selectedAge,
                           items: [
                             for (int age = 0; age <= 100; age++)
@@ -358,4 +334,3 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
     );
   }
 }
-
