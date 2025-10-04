@@ -49,10 +49,10 @@ class AuthService {
   Future<void> createProfile({
     required String username,
     String? avatarURL,
-    required Int age,
-    required int location,
-    required int gender,
-    required int skillLevel,
+    required int? age,
+    required int? location,
+    required int? gender,
+    required int? skillLevel,
   }) async {
     final user = _supabase.auth.currentUser;
     if (user == null) {
