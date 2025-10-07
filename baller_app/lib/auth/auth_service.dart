@@ -58,18 +58,17 @@ class AuthService {
     if (user == null) {
       throw Exception('No user logged in!');
     }
-
-    final response = await _supabase.from('profiles').update({
+    try {
+      await _supabase.from('profiles').upsert({
       'id': user.id,
       'username': username,
       'age': age,
       'location': location,
       'gender': gender,
       'skill_level': skillLevel,
-    });
-
-    if (response.error != null) {
-      throw Exception(response.error!.message);
+      });
+    } catch (e) {
+      throw Exception('Failed to create profile: $e');
     }
   }
 

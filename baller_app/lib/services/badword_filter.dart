@@ -18,7 +18,7 @@ class BadwordFilter {
   }
 
   static bool containsBadWord(String text) {
-    final lower = text.toLowerCase();
+    final lower = text.toLowerCase().split(RegExp(r'\s+'));
     for (final bad in _badWords) {
       if (lower.contains(bad)) return true;
     }
