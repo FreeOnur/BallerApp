@@ -1,4 +1,5 @@
 import 'package:baller_app/pages/AuthenthicationPage/login_page.dart';
+import 'package:baller_app/widgets/bars/bottom_navigation_bars/bottom_navigation_bar_1.dart';
 import 'package:baller_app/widgets/buttons/navigation_button.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -32,6 +33,7 @@ class HomePage extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(15, 15, 15, 100),
+      bottomNavigationBar: btmNavigationBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
