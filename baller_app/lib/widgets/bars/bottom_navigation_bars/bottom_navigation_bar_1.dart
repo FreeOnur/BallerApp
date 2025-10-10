@@ -9,21 +9,27 @@ class btmNavigationBar extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 27, 27, 27),
       selectedItemColor: const Color.fromRGBO(231, 85, 39, 100),
       unselectedItemColor: const Color.fromARGB(255, 102, 102, 102),
-      items: const <BottomNavigationBarItem>[
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
+      iconSize: 40,
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: ImageIcon(
-            AssetImage('assets/icons/Basketball_Player.png'),
-            size: 40,
+          icon: Transform.scale(
+            scale: 1.2,
+            child: ImageIcon(
+              AssetImage('assets/icons/Basketball_Player.png'),
+              size: 70,
+            ),
           ),
-          label: 'Home',
+          label: '',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.location_on_outlined),
-          label: 'Search',
+          label: '',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.account_circle_outlined),
-          label: 'Profile',
+          label: '',
         ),
       ],
     );
