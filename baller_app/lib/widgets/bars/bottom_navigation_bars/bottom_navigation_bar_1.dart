@@ -15,20 +15,23 @@ class btmNavigationBar extends StatelessWidget {
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Transform.scale(
-            scale: 1.2,
-            child: ImageIcon(
-              AssetImage('assets/icons/Basketball_Player.png'),
-              size: 70,
-            ),
+            scale: 2.4,
+            child: ImageIcon(AssetImage('assets/icons/Basketball_Player.png')),
           ),
           label: '',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.location_on_outlined),
+          icon: Transform.scale(
+            scale: 1.2,
+            child: Icon(Icons.location_on_outlined),
+          ),
           label: '',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.account_circle_outlined),
+          icon: Transform.scale(
+            scale: 1.2,
+            child: Icon(Icons.account_circle_outlined),
+          ),
           label: '',
         ),
       ],
