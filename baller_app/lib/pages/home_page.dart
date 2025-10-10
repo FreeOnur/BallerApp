@@ -76,13 +76,12 @@ class HomePage extends StatelessWidget {
                       SizedBox(height: screenHeight * 0.03),
                       NavigationButton(
                         title: 'Find a Court',
-                       page: LoginPage(),
+                        page: LoginPage(),
                         screenHeight: screenHeight,
                         screenWidth: screenWidth,
                       ),
                     ],
                   ),
-                  
                 ],
               ),
             ),
@@ -97,38 +96,37 @@ class HomePage extends StatelessWidget {
                   Column(
                     children: [
                       SizedBox(
-                        width: screenWidth *0.74,
+                        width: screenWidth * 0.74,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: [                        
+                          children: [
                             Icon(
                               Icons.sports_basketball_rounded,
                               color: Color.fromRGBO(231, 85, 39, 100),
-                              size: 40 * screenHeight / 400,
+                              size: 40 * screenHeight / 500,
                             ),
                             Spacer(),
                             Text(
                               'Find a Match',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 18 * screenHeight / 400,
-                                fontWeight: FontWeight.bold
+                                fontSize: 18 * screenHeight / 490,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                        
                           ],
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.03),
                       NavigationButton(
                         title: 'Find a Match',
-                       page: LoginPage(),
+                        page: LoginPage(),
                         screenHeight: screenHeight,
                         screenWidth: screenWidth,
                       ),
+                      SizedBox(height: screenHeight * 0.02),
                     ],
                   ),
-                  
                 ],
               ),
             ),

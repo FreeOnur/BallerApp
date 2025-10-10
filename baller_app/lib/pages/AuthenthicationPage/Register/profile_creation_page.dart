@@ -120,6 +120,7 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
           });
         });
   }
+
   @override
   void dispose() {
     super.dispose();
