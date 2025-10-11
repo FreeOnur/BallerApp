@@ -1,6 +1,6 @@
 import 'package:baller_app/auth/auth_service.dart';
 import 'package:baller_app/pages/AuthenthicationPage/Register/profile_creation_page.dart';
-import 'package:baller_app/pages/AuthenthicationPage/login_page.dart';
+import 'package:baller_app/pages/AuthenthicationPage/Register/login_page.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {

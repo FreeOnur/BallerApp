@@ -11,7 +11,8 @@ authenticated -> Profile Page
 
 import 'package:baller_app/pages/AuthenthicationPage/Register/profile_creation_page.dart';
 import 'package:baller_app/pages/home_page.dart';
-import 'package:baller_app/pages/AuthenthicationPage/login_page.dart';
+import 'package:baller_app/pages/AuthenthicationPage/Register/login_page.dart';
+import 'package:baller_app/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -52,7 +53,7 @@ class AuthGate extends StatelessWidget {
                 );
               }
               if(snapshot.data == true) {
-                return const HomePage();
+                return const MainPage();
               } else {
                 return const ProfileCreationPage();
               }
