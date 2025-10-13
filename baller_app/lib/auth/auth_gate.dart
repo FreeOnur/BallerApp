@@ -10,9 +10,9 @@ authenticated -> Profile Page
 */
 
 import 'package:baller_app/pages/AuthenthicationPage/Register/profile_creation_page.dart';
-import 'package:baller_app/pages/home_page.dart';
+import 'package:baller_app/pages/Home/home_page.dart';
 import 'package:baller_app/pages/AuthenthicationPage/Register/login_page.dart';
-import 'package:baller_app/pages/main_page.dart';
+import 'package:baller_app/pages/Home/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -30,6 +30,7 @@ class AuthGate extends StatelessWidget {
 
     return response != null;
   }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -47,17 +48,17 @@ class AuthGate extends StatelessWidget {
           return FutureBuilder<bool>(
             future: _hasProfile(),
             builder: (context, snapshot) {
-              if(!snapshot.hasData) {
+              if (!snapshot.hasData) {
                 return const Scaffold(
-                  body: Center(child:CircularProgressIndicator()),
+                  body: Center(child: CircularProgressIndicator()),
                 );
               }
-              if(snapshot.data == true) {
+              if (snapshot.data == true) {
                 return const MainPage();
               } else {
                 return const ProfileCreationPage();
               }
-            },            
+            },
           );
         } else {
           return const LoginPage();

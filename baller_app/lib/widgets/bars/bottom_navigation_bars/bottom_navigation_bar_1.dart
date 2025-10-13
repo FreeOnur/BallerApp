@@ -1,8 +1,12 @@
-import 'package:baller_app/pages/home_page.dart';
+import 'package:baller_app/pages/Home/home_page.dart';
 import 'package:flutter/material.dart';
 
 class BtmNavigationBar extends StatelessWidget {
-  const BtmNavigationBar({super.key, required this.onTap, required this.currentIndex});
+  const BtmNavigationBar({
+    super.key,
+    required this.onTap,
+    required this.currentIndex,
+  });
   final ValueChanged<int> onTap;
   final int currentIndex;
   @override
@@ -15,7 +19,7 @@ class BtmNavigationBar extends StatelessWidget {
       onTap: onTap,
       currentIndex: currentIndex,
       iconSize: 40,
-        items: <BottomNavigationBarItem>[
+      items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Transform.scale(
             scale: 2.4,

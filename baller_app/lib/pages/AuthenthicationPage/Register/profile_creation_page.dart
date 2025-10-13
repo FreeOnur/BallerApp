@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:baller_app/auth/auth_service.dart';
-import 'package:baller_app/pages/home_page.dart';
-import 'package:baller_app/pages/main_page.dart';
+import 'package:baller_app/pages/Home/home_page.dart';
+import 'package:baller_app/pages/Home/main_page.dart';
 import 'package:baller_app/widgets/profile_creation/avatar.dart';
 import 'package:baller_app/widgets/text_fields/drop_down_field_custom.dart';
 import 'package:baller_app/widgets/text_fields/text_form_field_custom';
