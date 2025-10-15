@@ -1,4 +1,5 @@
 import 'package:baller_app/pages/AuthenthicationPage/Register/login_page.dart';
+import 'package:baller_app/pages/Map/map_page.dart';
 import 'package:baller_app/widgets/bars/bottom_navigation_bars/bottom_navigation_bar_1.dart';
 import 'package:baller_app/widgets/buttons/navigation_button.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,7 @@ class HomePage extends StatelessWidget {
                       SizedBox(height: screenHeight * 0.03),
                       NavigationButton(
                         title: 'Find a Court',
-                        page: LoginPage(),
+                        page: MapPage(),
                         screenHeight: screenHeight,
                         screenWidth: screenWidth,
                       ),
