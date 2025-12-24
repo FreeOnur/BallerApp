@@ -47,5 +47,19 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need access to photo Library</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Wir brauchen deinen Standort, um Courts in deiner Nähe anzuzeigen.</string>
+
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Wir brauchen deinen Standort, um Courts in deiner Nähe anzuzeigen.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+<string>We need your location to detect nearby courts.</string>
+
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>We need your location to detect when you are playing at a court.</string>
+<key>UIBackgroundModes</key>
+<array>
+  <string>location</string>
+</array>
 </dict>
 </plist>
