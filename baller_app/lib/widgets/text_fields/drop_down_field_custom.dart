@@ -31,6 +31,7 @@ class DropDownFieldCustom extends StatelessWidget {
             fontSize: 20,
           ),
         ),
+        isExpanded: true,
         dropdownColor: const Color.fromARGB(255, 39, 39, 39),
         initialValue: controller.text.isNotEmpty ? controller.text : null,
         items: items

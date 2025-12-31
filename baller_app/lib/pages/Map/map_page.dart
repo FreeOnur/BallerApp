@@ -1,5 +1,7 @@
 import 'package:baller_app/models/Court.dart';
 import 'package:baller_app/pages/Map/court_details_page.dart';
+import 'package:baller_app/services/load_position.dart';
+import 'package:baller_app/widgets/popups/create_map_window.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -21,6 +23,7 @@ class _MapPageState extends State<MapPage> {
   List<Court> sortedCourts = [];
   int visibleCourtsCount = 10;
   String searchQuery = '';
+  final LocationService locationService = LocationService();
 
   @override
   void initState() {
@@ -30,28 +33,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> loadPosition() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      debugPrint("❌ Location Service aus");
-      return;
-    }
-
-    LocationPermission permission = await Geolocator.checkPermission();
-
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      debugPrint("❌ Permission denied forever");
-      return;
-    }
-
-    userPosition = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
-    debugPrint("✅ Position: $userPosition");
+    userPosition = await LocationService().loadPosition();
 
     updateSortedCourts();
 
@@ -181,6 +163,7 @@ class _MapPageState extends State<MapPage> {
                     target: LatLng(47.0, 8.0),
                     zoom: 12,
                   ),
+                  mapType: MapType.satellite,
                   myLocationEnabled: true,
                   markers: sortedCourts.map(
                     (court) => Marker(
@@ -254,14 +237,14 @@ class _MapPageState extends State<MapPage> {
                                 Container(
                                   width: 60,
                                   height: 60,
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Icon(
-                                    Icons.sports_basketball,
-                                    color: Colors.white,
-                                  ),
+                                  // decoration: BoxDecoration(
+                                  //   color: Colors.orange,
+                                  //   borderRadius: BorderRadius.circular(8),
+                                  // ),
+                                  // child: const Icon(
+                                  //   Icons.sports_basketball,
+                                  //   color: Colors.white,
+                                  // ),
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
@@ -313,16 +296,47 @@ class _MapPageState extends State<MapPage> {
                     ),
             ),
           ),
-          const SizedBox(
+          SizedBox(
             height: 80,
             width: double.infinity,
-            child: Center(
-              child: Text(
-                'BallerApp © 2024',
-                style: TextStyle(
-                  color: Colors.white54,
-                ),
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  margin: const EdgeInsets.only(left: 10),
+                  decoration: const BoxDecoration(
+                    color: Colors.orange,
+                    shape: BoxShape.circle,
+                    border: Border(
+                      top: BorderSide(color: Colors.white, width: 2),
+                      bottom: BorderSide(color: Colors.white, width: 2),
+                      left: BorderSide(color: Colors.white, width: 2),
+                      right: BorderSide(color: Colors.white, width: 2),
+                    )
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.add, color: Colors.white),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          backgroundColor: Colors.black87,
+                          title: const Text('Create Map', style: TextStyle(color: Colors.white),),
+                          content: CreateMapWindow(),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('OK', style: TextStyle(color: Colors.orange),),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                )
+              ],
             )
           ),
         ],
