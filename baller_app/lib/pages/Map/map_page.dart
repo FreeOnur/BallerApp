@@ -10,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
 
+
   @override
   State<MapPage> createState() => _MapPageState();
 }
@@ -58,7 +59,7 @@ class _MapPageState extends State<MapPage> {
 
     courts = data.map((e) => Court.fromMap(e)).toList();
     filteredCourts = courts;
-
+    visibleCourtsCount = 10;
     updateSortedCourts();
 
     setState(() {});
@@ -237,6 +238,9 @@ class _MapPageState extends State<MapPage> {
                                 Container(
                                   width: 60,
                                   height: 60,
+                                  //TODO: Add court image and details page
+
+                                  
                                   // decoration: BoxDecoration(
                                   //   color: Colors.orange,
                                   //   borderRadius: BorderRadius.circular(8),
@@ -318,21 +322,17 @@ class _MapPageState extends State<MapPage> {
                   ),
                   child: IconButton(
                     icon: const Icon(Icons.add, color: Colors.white),
-                    onPressed: () {
-                      showDialog(
+                    onPressed: () async{
+                      await showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
                           backgroundColor: Colors.black87,
                           title: const Text('Create Map', style: TextStyle(color: Colors.white),),
                           content: CreateMapWindow(),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: const Text('OK', style: TextStyle(color: Colors.orange),),
-                            ),
-                          ],
                         ),
                       );
+
+                      await fetchCourts();
                     },
                   ),
                 )

@@ -5,7 +5,6 @@ class Court {
   final double lng;
   final bool indoor;
 
-
   Court({
     required this.id,
     required this.name,
