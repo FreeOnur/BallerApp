@@ -23,7 +23,7 @@ class CheckBoxCustom extends StatelessWidget {
         Text(
           text,
           style: TextStyle(
-            fontSize: MediaQuery.of(context).size.height * 0.03,
+            fontSize: MediaQuery.of(context).size.height * 0.02,
             color: Colors.grey[700],
           ),
         ),

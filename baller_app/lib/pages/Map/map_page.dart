@@ -1,6 +1,7 @@
 import 'package:baller_app/models/Court.dart';
 import 'package:baller_app/pages/Map/court_details_page.dart';
 import 'package:baller_app/services/load_position.dart';
+import 'package:baller_app/theme/app_colors.dart';
 import 'package:baller_app/widgets/popups/create_map_window.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,7 +10,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
-
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -25,6 +25,7 @@ class _MapPageState extends State<MapPage> {
   int visibleCourtsCount = 10;
   String searchQuery = '';
   final LocationService locationService = LocationService();
+  AppColors appColors = AppColors();
 
   @override
   void initState() {
@@ -41,10 +42,7 @@ class _MapPageState extends State<MapPage> {
     if (mapController != null) {
       mapController!.animateCamera(
         CameraUpdate.newLatLngZoom(
-          LatLng(
-            userPosition!.latitude,
-            userPosition!.longitude,
-          ),
+          LatLng(userPosition!.latitude, userPosition!.longitude),
           13,
         ),
       );
@@ -54,7 +52,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> fetchCourts() async {
-    final res = await Supabase.instance.client.from('courts').select();
+    final res = await Supabase.instance.client.from('courts').select().eq('status', 'approved');
     final data = res as List;
 
     courts = data.map((e) => Court.fromMap(e)).toList();
@@ -72,17 +70,14 @@ class _MapPageState extends State<MapPage> {
     }
 
     sortedCourts = List<Court>.from(filteredCourts)
-      ..sort(
-        (a, b) => distanceToCourt(a).compareTo(distanceToCourt(b)),
-      );
+      ..sort((a, b) => distanceToCourt(a).compareTo(distanceToCourt(b)));
   }
 
   void searchCourts(String query) {
     searchQuery = query.toLowerCase();
 
     filteredCourts = courts
-        .where((court) =>
-            court.name.toLowerCase().contains(searchQuery))
+        .where((court) => court.name.toLowerCase().contains(searchQuery))
         .toList();
 
     updateSortedCourts();
@@ -99,12 +94,14 @@ class _MapPageState extends State<MapPage> {
       court.lng,
     );
   }
+
   List<Court> get visibleCourts {
     if (sortedCourts.length <= visibleCourtsCount) {
       return sortedCourts;
     }
     return sortedCourts.take(visibleCourtsCount).toList();
   }
+
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -114,12 +111,12 @@ class _MapPageState extends State<MapPage> {
       backgroundColor: const Color.fromRGBO(15, 15, 15, 1),
       body: Column(
         children: [
-          SizedBox(height: screenHeight * 0.05),
+          SizedBox(height: screenHeight * 0.06),
 
           Icon(
             Icons.location_on,
             color: const Color.fromRGBO(231, 85, 39, 1),
-            size: screenHeight * 0.09,
+            size: screenHeight * 0.07,
           ),
 
           Padding(
@@ -154,7 +151,7 @@ class _MapPageState extends State<MapPage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: SizedBox(
-                height: screenHeight * 0.4,
+                height: screenHeight * 0.3,
                 width: double.infinity,
                 child: GoogleMap(
                   onMapCreated: (controller) {
@@ -166,13 +163,15 @@ class _MapPageState extends State<MapPage> {
                   ),
                   mapType: MapType.satellite,
                   myLocationEnabled: true,
-                  markers: sortedCourts.map(
-                    (court) => Marker(
-                      markerId: MarkerId(court.id.toString()),
-                      position: LatLng(court.lat, court.lng),
-                      infoWindow: InfoWindow(title: court.name),
-                    ),
-                  ).toSet(),
+                  markers: sortedCourts
+                      .map(
+                        (court) => Marker(
+                          markerId: MarkerId(court.id.toString()),
+                          position: LatLng(court.lat, court.lng),
+                          infoWindow: InfoWindow(title: court.name),
+                        ),
+                      )
+                      .toSet(),
                 ),
               ),
             ),
@@ -182,9 +181,7 @@ class _MapPageState extends State<MapPage> {
             child: Container(
               decoration: const BoxDecoration(
                 color: Colors.black87,
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(16),
-                ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
               ),
               child: sortedCourts.isEmpty
                   ? const Center(
@@ -194,10 +191,9 @@ class _MapPageState extends State<MapPage> {
                       ),
                     )
                   : ListView.builder(
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.fromLTRB(12, 12, 12, 100),
                       itemCount: visibleCourts.length + 1,
                       itemBuilder: (context, index) {
-
                         if (index == visibleCourts.length) {
                           if (visibleCourts.length == sortedCourts.length) {
                             return const SizedBox.shrink();
@@ -240,7 +236,6 @@ class _MapPageState extends State<MapPage> {
                                   height: 60,
                                   //TODO: Add court image and details page
 
-                                  
                                   // decoration: BoxDecoration(
                                   //   color: Colors.orange,
                                   //   borderRadius: BorderRadius.circular(8),
@@ -276,9 +271,12 @@ class _MapPageState extends State<MapPage> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => CourtDetailsPage(court: court),
+                                              builder: (context) =>
+                                                  CourtDetailsPage(
+                                                    court: court,
+                                                  ),
                                             ),
-                                          )
+                                          ),
                                         },
                                         child: Text(
                                           'See More',
@@ -288,7 +286,7 @@ class _MapPageState extends State<MapPage> {
                                                 TextDecoration.underline,
                                           ),
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -300,44 +298,50 @@ class _MapPageState extends State<MapPage> {
                     ),
             ),
           ),
-          SizedBox(
-            height: 80,
-            width: double.infinity,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  margin: const EdgeInsets.only(left: 10),
-                  decoration: const BoxDecoration(
-                    color: Colors.orange,
-                    shape: BoxShape.circle,
-                    border: Border(
-                      top: BorderSide(color: Colors.white, width: 2),
-                      bottom: BorderSide(color: Colors.white, width: 2),
-                      left: BorderSide(color: Colors.white, width: 2),
-                      right: BorderSide(color: Colors.white, width: 2),
-                    )
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.add, color: Colors.white),
-                    onPressed: () async{
-                      await showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          backgroundColor: Colors.black87,
-                          title: const Text('Create Map', style: TextStyle(color: Colors.white),),
-                          content: CreateMapWindow(),
-                        ),
-                      );
+          SafeArea(
+            top: false, // wichtig: nur unten beachten
+            child: SizedBox(
+              height: 80,
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 50,
+                    height: 50,
+                    margin: const EdgeInsets.only(left: 10),
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                      border: Border(
+                        top: BorderSide(color: Colors.white, width: 2),
+                        bottom: BorderSide(color: Colors.white, width: 2),
+                        left: BorderSide(color: Colors.white, width: 2),
+                        right: BorderSide(color: Colors.white, width: 2),
+                      ),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.add, color: Colors.white),
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Colors.black87,
+                            title: const Text(
+                              'Create Map',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            content: CreateMapWindow(),
+                          ),
+                        );
 
-                      await fetchCourts();
-                    },
+                        await fetchCourts();
+                      },
+                    ),
                   ),
-                )
-              ],
-            )
+                ],
+              ),
+            ),
           ),
         ],
       ),

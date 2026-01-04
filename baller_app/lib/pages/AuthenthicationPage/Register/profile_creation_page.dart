@@ -18,9 +18,9 @@ class ProfileCreationPage extends StatefulWidget {
 }
 
 class _ProfileCreationPageState extends State<ProfileCreationPage> {
-  File? _imageFile;
-  final _formkey = GlobalKey<FormState>();
-  String? _imageUrl;
+  File? imageFile;
+  final formkey = GlobalKey<FormState>();
+  String? imageUrl;
   final authService = AuthService();
 
   final usernameController = TextEditingController();
@@ -90,18 +90,14 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
   //6820
   //15102007Gmail#.
 
-  // pick image
   Future pickImage() async {
-    // picker
     final ImagePicker _picker = ImagePicker();
 
-    //pick from gallery
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
-    //update image preview
     if (image != null) {
       setState(() {
-        _imageFile = File(image.path);
+        imageFile = File(image.path);
       });
     }
   }
@@ -117,7 +113,7 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
         .single()
         .then((data) {
           setState(() {
-            _imageUrl = data['avatar_url'] as String?;
+            imageUrl = data['avatar_url'] as String?;
           });
         });
   }
@@ -127,18 +123,15 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
     super.dispose();
   }
 
-  // upload
   Future uploadImage() async {
-    if (_imageFile == null) return;
+    if (imageFile == null) return;
 
-    //generate unique file path for image
     final fileName = DateTime.now().millisecondsSinceEpoch.toString();
     final path = 'uploads/$fileName';
 
-    //upload to supabase storage to this bucket
     await Supabase.instance.client.storage
         .from('images')
-        .upload(path, _imageFile!)
+        .upload(path, imageFile!)
         .then(
           (data) => ScaffoldMessenger(
             child: SnackBar(content: Text("Image uploaded successfully!")),
@@ -163,10 +156,10 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
             SizedBox(height: screenheight * 0.2),
             // Avatar widget soll hier kommen
             Avatar(
-              imageUrl: _imageUrl,
+              imageUrl: imageUrl,
               onUpload: (imageUrl) async {
                 setState(() {
-                  _imageUrl = imageUrl;
+                  imageUrl = imageUrl;
                 });
                 final userId = Supabase.instance.client.auth.currentUser!.id;
                 await Supabase.instance.client
@@ -176,7 +169,7 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
               },
             ),
             Form(
-              key: _formkey,
+              key: formkey,
               child: Column(
                 children: [
                   TextFormFieldCustom(
@@ -311,7 +304,7 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
                         ),
                       ),
                       onPressed: () async {
-                        if (_formkey.currentState!.validate()) {
+                        if (formkey.currentState!.validate()) {
                           createProfile();
                           print('Profile created');
                         }
