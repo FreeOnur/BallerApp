@@ -17,13 +17,14 @@ class CourtServices {
     final res = await Supabase.instance.client
         .from('courts')
         .insert({
+          'source': 'community',
           'name': name,
           'lat': latitude,
           'lng': longitude,
           'indoor': indoor,
-          'light': hasLights,
-          'court_markings': hasCourtMarkings,
-          'ground': groundType,
+          'lights': hasLights,
+          'has_markings': hasCourtMarkings,
+          'surface': groundType,
           'hoops': hoops,
           'address': address,
         })
