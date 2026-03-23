@@ -9,6 +9,7 @@ Never:
 
 - Query Supabase directly from UI (pages/widgets)
 - Expose service role key or admin privileges in client code
+- Tie the app tightly to supabase so I can switch later to a self hosted backend
 
 Always:
 
