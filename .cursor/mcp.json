@@ -1,0 +1,35 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp"
+    },
+    "github": {
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer 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"
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "."
+      ]
+    },
+    "browser": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp"
+      ]
+    },
+    "stitch": {
+      "url": "https://stitch.googleapis.com/mcp",
+      "headers": {
+        "X-Goog-Api-Key": "AQ.Ab8RN6LtI9ERt8GT6L1s-_ww8p_xZ-BG2GYmb5Ah1w-b2LCACw"
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "plugins": {
+    "supabase": {
+      "enabled": true
+    },
+    "figma": {
+      "enabled": true
+    },
+    "continual-learning": {
+      "enabled": true
+    }
+  }
+}
