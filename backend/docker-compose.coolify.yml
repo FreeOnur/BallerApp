@@ -1,4 +1,7 @@
-# Coolify: no Caddy here — Coolify proxy + SSL for the API domain.
+# Coolify: set ALL variables below in Coolify → Environment Variables (Production).
+# They are referenced here as ${VAR} — Coolify injects them at deploy time.
+# No Caddy — Coolify handles HTTPS for api.ballup.net → api:8000
+
 services:
   db:
     image: postgis/postgis:16-3.4
@@ -19,15 +22,27 @@ services:
   api:
     build: .
     restart: unless-stopped
-    env_file: .env
-    environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
-      ENVIRONMENT: production
     depends_on:
       db:
         condition: service_healthy
     expose:
       - "8000"
+    environment:
+      # DB (password must not contain unencoded @ # : in URL — use simple chars or URL-encode)
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      # Auth
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ACCESS_MINUTES: ${JWT_ACCESS_MINUTES:-15}
+      JWT_REFRESH_DAYS: ${JWT_REFRESH_DAYS:-30}
+      # App
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      CORS_ORIGINS: ${CORS_ORIGINS:-*}
+      # Backblaze B2 (presigned uploads)
+      B2_KEY_ID: ${B2_KEY_ID:-}
+      B2_APP_KEY: ${B2_APP_KEY:-}
+      B2_BUCKET: ${B2_BUCKET:-courtfinder-images}
+      B2_ENDPOINT: ${B2_ENDPOINT:-https://s3.us-west-002.backblazeb2.com}
+      B2_REGION: ${B2_REGION:-us-west-002}
 
 volumes:
   pgdata:

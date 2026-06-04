@@ -1,288 +1,398 @@
-# BallerApp auf deinen Server (Coolify)
+# BallerApp — Komplettes Tutorial (eigener Server)
 
-**Einzige Anleitung.** Ziel: API + Postgres auf Hetzner, Bilder in Backblaze B2, App nutzt `https://api.DEINE-DOMAIN.de`.
+**Eine Datei. Alles in Reihenfolge.**  
+Ziel: Weg von Supabase → **dein Server (Hetzner + Coolify)** + **api.ballup.net** + Bilder in **Backblaze B2**.
 
-Repo: `BallerApp/backend` · Compose für Coolify: `docker-compose.coolify.yml`
-
----
-
-## Übersicht
-
-```
-Domain-DNS (A-Record)  →  Server-IP
-Coolify (auf Server)   →  Docker: Postgres + FastAPI
-Backblaze B2           →  Bilder (Keys nur in Coolify Env)
-Flutter App            →  API_BASE_URL=https://api...
-```
-
-**DNS machst du nicht in CMD** und nicht in Coolify zuerst — sondern beim **Domain-Anbieter** (Cloudflare, IONOS, Namecheap, Hetzner DNS, …).
+**Repo auf PC:** `C:\Users\runolion\Documents\code\BallerApp\BallerApp`
 
 ---
 
-## Teil 1 — Server + Coolify
+## Checkliste (zum Abhaken)
 
-### 1.1 Hetzner
-
-- Server (CPX22, Ubuntu 24.04)
-- **IPv4 notieren:** z. B. `123.45.67.89`
-
-### 1.2 Coolify installieren (SSH auf Server)
-
-```bash
-ssh root@DEINE_SERVER_IP
+```
+[ ] 1. Hetzner Server + IPv4 notiert
+[ ] 2. Coolify installiert (Browser UI erreichbar)
+[ ] 3. DNS: api.ballup.net → A-Record → Server-IP (DNS-Verwaltung)
+[ ] 4. Coolify: Git + docker-compose.coolify.yml + alle Env-Variablen
+[ ] 5. Coolify: Domain api.ballup.net → Service api → Port 8000 → HTTPS
+[ ] 6. https://api.ballup.net/health → ok
+[ ] 7. Supabase-Daten exportiert + in Postgres importiert
+[ ] 8. Flutter: USE_LEGACY_SUPABASE=false + API_BASE_URL=https://api.ballup.net
+[ ] 9. App getestet (Login, Courts)
+[ ] 10. Weiter coden / später Supabase abschalten
 ```
 
-Offizielles Install-Skript (von [coolify.io](https://coolify.io/docs)):
+---
+
+## Vorher / Nachher
+
+| | **Vorher (Supabase)** | **Nachher (dein Setup)** |
+|---|----------------------|---------------------------|
+| Auth | Supabase Auth | FastAPI + JWT (dein Server) |
+| DB | Supabase Postgres | Postgres in Docker (Coolify) |
+| API | Supabase Client | `https://api.ballup.net` |
+| Bilder | Supabase Storage | Backblaze B2 (Keys in Coolify) |
+| App-Flag | `USE_LEGACY_SUPABASE=true` | `USE_LEGACY_SUPABASE=false` |
+
+---
+
+## Was läuft wo (Übersicht)
+
+```
+Handy (Flutter)
+    ↓ HTTPS
+api.ballup.net          ← DNS A-Record (dein Domain-Panel)
+    ↓
+Coolify (Proxy + SSL)
+    ↓
+FastAPI Container :8000
+    ↓
+Postgres Container (nur intern)
+Bild-Dateien → Backblaze B2
+```
+
+**DNS:** nur im **Domain-Panel** (Einstellungen → DNS-Verwaltung). **Nicht** in CMD. **Nicht** zuerst in Coolify.
+
+**Secrets:** nur in **Coolify → Environment Variables**. **Nicht** in Git committen.
+
+---
+
+# Schritt 1 — Hetzner Server
+
+1. [Hetzner Cloud](https://console.hetzner.cloud/) → Server anlegen  
+   - Typ: **CPX22** (reicht für Start)  
+   - Image: **Ubuntu 24.04**  
+   - SSH-Key hinzufügen  
+2. **IPv4 kopieren** (z. B. `95.xxx.xxx.xxx`) — brauchst du für DNS und SSH.
+
+Vom PC verbinden:
+
+```powershell
+ssh root@DEINE_HETZNER_IP
+```
+
+---
+
+# Schritt 2 — Coolify installieren
+
+Auf dem Server (SSH):
 
 ```bash
 curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
 ```
 
-Warten bis fertig. Coolify-UI im Browser:
+Warten (einige Minuten). Dann im **Browser auf dem PC**:
 
-- `http://DEINE_SERVER_IP:8000` (Port laut Installer-Ausgabe)
+```
+http://DEINE_HETZNER_IP:8000
+```
 
-Einrichtung: Admin-Account, Server ist „localhost“.
+(Port steht in der Installer-Ausgabe, falls anders.)
+
+- Admin-Account anlegen  
+- Server „localhost“ ist ok  
+
+Coolify ist deine Oberfläche für Deploy, SSL und Env-Variablen.
 
 ---
 
-## Teil 2 — DNS (A-Record) — wichtig
+# Schritt 3 — DNS für die API (ballup.net)
 
-API-URL wird z. B. **`https://api.ballup.net`** (Subdomain `api` + deine Domain).
+### Wo (dein Panel)
 
-### Bei deinem Panel (Screenshot: Domain-Registrierung)
-
-1. Links **Einstellungen** → **DNS-Verwaltung** (nicht SSL Manager).
-2. Domain **`ballup.net`** auswählen (Status grün = aktiv).
-3. **Neuen Eintrag** / **Record hinzufügen**:
-
-| Feld (deutsch/englisch) | Eintrag |
-|-------------------------|---------|
-| **Typ** | `A` |
-| **Name / Host / Subdomain** | `api` (nur `api`, nicht `api.ballup.net` — je nach Panel) |
-| **Ziel / Wert / IPv4** | **Hetzner-Server-IP** (z. B. `123.45.67.89`) |
-| **TTL** | 300 oder Standard |
-
-4. Speichern.
-
-Ergebnis: `api.ballup.net` zeigt auf deinen Server.
-
-**SSL für HTTPS** macht **Coolify** (Let’s Encrypt) — im DNS-Panel brauchst du nur den **A-Record**, kein SSL-Manager-Eintrag für die API.
-
-### Andere Anbieter
-
-| Anbieter | Wo |
-|----------|-----|
-| **Cloudflare** | DNS → Add record |
-| **IONOS / Strato** | DNS-Verwaltung |
-| **Hetzner DNS** | Console → DNS Zone |
-
-### Prüfen
+1. **Einstellungen** → **DNS-Verwaltung** (nicht „SSL Manager“)  
+2. Domain **ballup.net** wählen  
+3. **Neuer Eintrag:**
 
 | Feld | Wert |
 |------|------|
-| **Type** | `A` |
-| **Name** | `api` |
-| **Value** | Hetzner IPv4 |
+| Typ | **A** |
+| Name / Host | **api** |
+| Ziel / IPv4 | **DEINE_HETZNER_IP** |
+| TTL | Standard |
 
-**Nicht** in Windows CMD, **nicht** auf dem Server mit `nslookup` eintragen — nur beim Domain-Provider speichern.
+4. Speichern  
 
-### Prüfen (optional, CMD/PowerShell auf PC)
+→ **`api.ballup.net`** zeigt auf deinen Server.
+
+**HTTPS/SSL:** kommt von **Coolify** (Schritt 5). Im DNS-Panel nur der A-Record.
+
+### Prüfen (PC)
 
 ```powershell
-nslookup api.deine-domain.de
+nslookup api.ballup.net
 ```
 
-Muss deine **Server-IP** zeigen (kann 5–60 Min dauern).
+Antwort muss deine **Hetzner-IP** sein (5–60 Min warten ist normal).
 
 ---
 
-## Teil 3 — Projekt in Coolify
+# Schritt 4 — Backend in Coolify deployen
 
-### 3.1 Code verbinden
+## 4.1 Neue Resource
 
-**Project** → **+ New Resource** → **Public / Private Git Repository**
+Coolify UI:
 
-- Repo: `FreeOnur/BallerApp` (oder dein Fork)
-- Branch: `main` / `master`
-- **Base Directory / Root:** `BallerApp/backend` (Pfad zum Ordner mit `Dockerfile`)
+1. **+ New Project** (falls noch keins)  
+2. **+ New Resource** → **Public Repository** (oder Private mit Deploy Key)  
+3. Repository: `https://github.com/FreeOnur/BallerApp`  
+4. Branch: `main` oder `master`  
+5. **Base Directory / Pfad im Repo:**  
+   ```
+   BallerApp/backend
+   ```
+   (Ordner mit `Dockerfile` und `docker-compose.coolify.yml`)
 
-Falls kein Git auf Server: Resource **Docker Compose** + Repo per Deploy Key.
+## 4.2 Docker Compose
 
-### 3.2 Docker Compose
+| Einstellung | Wert |
+|-------------|------|
+| Build Pack | Docker Compose |
+| Compose-Datei | **`docker-compose.coolify.yml`** |
 
-- **Docker Compose Location:** `docker-compose.coolify.yml`
-- Nicht `docker-compose.prod.yml` (das ist für manuelles Caddy — bei Coolify unnötig)
+**Nicht** `docker-compose.prod.yml` (nur für Setup ohne Coolify).
 
-### 3.3 Environment Variables (Coolify UI)
+### Was die Compose-Datei macht
 
-Unter **Environment Variables** der Resource (Production):
+- Service **`db`**: Postgres + PostGIS  
+- Service **`api`**: FastAPI (baut aus `Dockerfile`)  
+- `${JWT_SECRET}` usw. = **Platzhalter** — Werte kommen aus Coolify (nächster Schritt)
+
+## 4.3 Environment Variables (WICHTIG)
+
+Coolify → deine Resource → **Environment Variables** → **Production** (oder „Preview“ je nach UI).
+
+**Alle** eintragen (Beispiel — eigene Secrets verwenden):
 
 ```env
 POSTGRES_USER=baller
-POSTGRES_PASSWORD=starkes-passwort-hier
+POSTGRES_PASSWORD=HierStarkesPasswortOhneSonderzeichen
 POSTGRES_DB=baller
 
-JWT_SECRET=mindestens-32-zufaellige-zeichen
+JWT_SECRET=hierMindestens32ZufaelligeZeichenABC123xyz
 JWT_ACCESS_MINUTES=15
 JWT_REFRESH_DAYS=30
+
 ENVIRONMENT=production
 CORS_ORIGINS=*
 
-B2_KEY_ID=...
-B2_APP_KEY=...
+B2_KEY_ID=dein_backblaze_key_id
+B2_APP_KEY=dein_backblaze_application_key
 B2_BUCKET=courtfinder-images
 B2_ENDPOINT=https://s3.us-west-002.backblazeb2.com
 B2_REGION=us-west-002
 ```
 
-`CORS_ORIGINS` später auf deine App-Domain einschränken.
+| Variable | Wofür |
+|----------|--------|
+| `POSTGRES_*` | Datenbank (Courts, User, …) |
+| `JWT_SECRET` | Login-Tokens (App-Auth) |
+| `CORS_ORIGINS` | Welche Apps die API aufrufen dürfen (`*` = alle, später einschränken) |
+| `B2_*` | Bild-Uploads (Presign-URLs) |
 
-**Passwort mit `#` oder `@`:** in `DATABASE_URL` URL-encoden, oder nur über die einzelnen `POSTGRES_*` Vars arbeiten (Compose setzt `DATABASE_URL` automatisch).
+**`POSTGRES_PASSWORD`:** keine Zeichen `#`, `@`, `:` — sonst bricht `DATABASE_URL`. Nur Buchstaben/Zahlen.
 
-### 3.4 Domain in Coolify (SSL)
+**B2 Keys:** Backblaze → App Keys → Application Key mit Zugriff auf Bucket `courtfinder-images`.
 
-Resource → **Domains** (oder **Configuration → Domains**):
+Ohne B2: API läuft trotzdem; Uploads über Presign gehen dann nicht.
+
+## 4.4 Domain + SSL in Coolify
+
+Resource → **Domains** (oder Configuration → Domains):
 
 | Feld | Wert |
 |------|------|
-| **Domain** | `api.ballup.net` (oder `api.deine-domain.de`) |
-| **Service** | `api` |
-| **Port** | `8000` |
-| **HTTPS** | an (Let’s Encrypt) |
+| Domain | **`api.ballup.net`** |
+| Container / Service | **`api`** |
+| Port | **`8000`** |
+| HTTPS | **An** (Let’s Encrypt) |
 
-Coolify holt Zertifikat — dafür muss der **A-Record schon** auf die Server-IP zeigen und Port **80/443** am Server erreichbar sein (Coolify/Firewall).
+Voraussetzung: A-Record (Schritt 3) zeigt schon auf den Server.
 
-**Deploy** klicken.
+## 4.5 Deploy
 
-### 3.5 Test
+**Deploy** klicken. Warten bis grün / Running.
 
-Browser: `https://api.deine-domain.de/health`  
-→ `{"status":"ok","environment":"production"}`
+### Test
 
-Swagger: `https://api.deine-domain.de/docs`
+Im Browser:
 
-Logs in Coolify: Resource → **Logs** → Service `api` / `db`.
+- https://api.ballup.net/health  
+  → `{"status":"ok","environment":"production"}`  
+- https://api.ballup.net/docs  
+  → Swagger-UI  
+
+### Bei Fehler
+
+Coolify → **Logs** → Service `api` und `db`.
+
+| Problem | Lösung |
+|---------|--------|
+| SSL failed | DNS noch nicht propagiert; A-Record prüfen |
+| api crashed | Logs lesen; fehlt `JWT_SECRET` in Env? |
+| db unhealthy | `POSTGRES_PASSWORD` gesetzt? Redeploy |
 
 ---
 
-## Teil 4 — Daten von Supabase
+# Schritt 5 — Daten von Supabase importieren
 
-### 4.1 Export (PC)
+## 5.1 Export (auf dem PC)
 
-Supabase Dashboard → SQL oder `pg_dump` — Tabellen:
+Supabase Dashboard → Project → **SQL** oder Database.
 
-- `courts`
-- `profiles`
-- `court_images`
+Tabellen exportieren:
 
-Details: `backend/scripts/export-from-supabase.md`
+- `courts`  
+- `profiles`  
+- `court_images`  
 
-Datei: `supabase-data.sql`
+Ausführlich: `backend/scripts/export-from-supabase.md`
 
-### 4.2 Import (Server)
+Ergebnis: Datei **`supabase-data.sql`**
 
-**Option A — Coolify Terminal** (Service `db`):
+## 5.2 SQL auf den Server kopieren
 
-```bash
-# In Coolify: db container shell, oder SSH:
-cd /data/coolify/...   # Pfad je nach Setup
-cat supabase-data.sql | docker exec -i CONTAINER_NAME psql -U baller -d baller
+```powershell
+scp C:\Pfad\zu\supabase-data.sql root@DEINE_HETZNER_IP:/tmp/supabase-data.sql
 ```
 
-**Option B — SSH + Compose-Pfad:**
+## 5.3 Import in Postgres
+
+SSH auf Server:
 
 ```bash
-# SQL nach Server kopieren (PC):
-scp supabase-data.sql root@DEINE_SERVER_IP:/tmp/
+docker ps
+```
 
-# Auf Server, im Backend-Deploy-Verzeichnis von Coolify oder:
-docker ps   # Name des db-Containers finden
-docker exec -i <db-container> psql -U baller -d baller < /tmp/supabase-data.sql
+Container mit **postgis** / **db** im Namen suchen (Coolify-Prefix).
+
+```bash
+docker exec -i CONTAINER_NAME psql -U baller -d baller < /tmp/supabase-data.sql
 ```
 
 Prüfen:
 
 ```bash
-docker exec -i <db-container> psql -U baller -d baller -c "SELECT COUNT(*) FROM courts;"
+docker exec -i CONTAINER_NAME psql -U baller -d baller -c "SELECT COUNT(*) FROM courts;"
 ```
 
 ---
 
-## Teil 5 — Flutter auf deinen Server
+# Schritt 6 — Flutter App umstellen
+
+## 6.1 Gegen deinen Server starten
 
 ```powershell
-cd baller_app
+cd C:\Users\runolion\Documents\code\BallerApp\BallerApp\baller_app
 flutter pub get
 flutter run --dart-define=USE_LEGACY_SUPABASE=false --dart-define=API_BASE_URL=https://api.ballup.net
 ```
 
-Release/APK: dieselben `--dart-define`.
-
-| Gerät | API_BASE_URL |
+| Gerät | `API_BASE_URL` |
 |-------|----------------|
-| Emulator Android | `https://api.deine-domain.de` (nicht localhost) |
-| echtes Handy | `https://api.deine-domain.de` |
+| Android-Emulator | `https://api.ballup.net` |
+| Echtes Handy | `https://api.ballup.net` |
 
-### Alte Supabase-Nutzer
+**Nicht** `localhost` — die API läuft auf dem Server.
 
-Passwörter von Supabase Auth funktionieren **nicht** auf dem neuen Backend → Nutzer müssen **neu registrieren** oder du schickst Passwort-Reset (wenn SMTP in `.env`).
+## 6.2 Testen
 
-### Bilder
+- [ ] Neuen Account **registrieren**  
+- [ ] **Login**  
+- [ ] **Courts / Karte** laden  
 
-- **Kurz:** App kann noch Supabase Storage nutzen (`USE_LEGACY_SUPABASE=true` nur für Uploads) = Hybrid.
-- **Ziel:** B2 über API `POST /uploads/presign` — Flutter-Code noch anpassen, Backend ist bereit.
+## 6.3 Alte Supabase-Nutzer
+
+Passwörter von Supabase Auth werden **nicht** übernommen.
+
+→ Nutzer müssen sich **neu registrieren** (oder du baust später E-Mail-Passwort-Reset).
+
+## 6.4 Bilder (Übergang)
+
+| Phase | Verhalten |
+|-------|-----------|
+| **Jetzt** | Uploads können noch **Supabase Storage** nutzen, wenn du `USE_LEGACY_SUPABASE=true` nur für Upload-Tests lässt = Hybrid |
+| **Ziel** | App holt Presign-URL von `POST /uploads/presign`, lädt nach **B2** — Flutter-Teil noch anpassen |
+
+DB + Auth können schon auf deinem Server sein, Bilder kurz noch bei Supabase.
 
 ---
 
-## Teil 6 — Weiter coden
+# Schritt 7 — Weiter coden
 
-| Modus | Wann |
-|-------|------|
-| `USE_LEGACY_SUPABASE=true` | Nur Supabase-Features testen / alte Uploads |
-| `USE_LEGACY_SUPABASE=false` | Alles über deinen Server (Ziel) |
+1. Code ändern in Cursor (`baller_app/`, `backend/`)  
+2. `git push` zu GitHub  
+3. Coolify → **Redeploy** (oder Auto-Deploy per Webhook)  
 
-Lokal am Code arbeiten wie gewohnt in Cursor. Nach Push: Coolify **Redeploy** (Webhook oder manuell).
+| Modus | Bedeutung |
+|-------|-----------|
+| `USE_LEGACY_SUPABASE=false` | **Ziel** — alles über api.ballup.net |
+| `USE_LEGACY_SUPABASE=true` | Nur noch für alte Supabase-Tests / Hybrid-Uploads |
 
-Backend-Code: `backend/app/`  
-Flutter: `baller_app/lib/`
+**Release / Play Store:** dieselben `--dart-define` beim Build setzen.
 
 ---
 
-## Teil 7 — Backup
+# Schritt 8 — Backup (empfohlen)
 
-Coolify oder Cron auf dem Server — täglich:
+SSH, täglich DB sichern:
 
 ```bash
-docker exec <db-container> pg_dump -U baller baller | gzip > backup.sql.gz
+docker exec CONTAINER_NAME pg_dump -U baller baller | gzip > /tmp/baller-backup.sql.gz
 ```
 
-Backup nach B2 kopieren.
+Datei nach **Backblaze B2** oder Hetzner Storage kopieren.
 
 ---
 
-## Checkliste
+# Schritt 9 — Supabase abschalten (ganz am Ende)
 
-- [ ] Server + Coolify läuft
-- [ ] A-Record `api` → Server-IP (beim Domain-Anbieter)
-- [ ] Coolify: Git `BallerApp/backend`, Compose `docker-compose.coolify.yml`
-- [ ] Env: Postgres, JWT, B2
-- [ ] Domain in Coolify → `api...` Port 8000, HTTPS
-- [ ] `/health` ok
-- [ ] Supabase-Daten importiert
-- [ ] Flutter mit `API_BASE_URL` getestet
+Erst wenn:
 
----
+- [ ] `https://api.ballup.net/health` ok  
+- [ ] App stabil mit `USE_LEGACY_SUPABASE=false`  
+- [ ] Daten importiert  
+- [ ] Nutzer informiert (neue Passwörter)  
 
-## Fehler
-
-| Problem | Fix |
-|---------|-----|
-| SSL schlägt fehl | A-Record prüfen, 80/443 offen, Domain in Coolify exakt |
-| `health` timeout | Logs `api`, DB healthy? |
-| App Network Error | `https://` in URL, kein Zertifikat-Problem am Handy |
-| DNS „geht nicht in CMD“ | Normal — DNS nur im **Domain-Panel** setzen |
+Dann Supabase-Projekt **pausieren** oder löschen (vorher letztes Backup).
 
 ---
 
-*Stand: Coolify + FastAPI + PostGIS + B2. Manuell mit Caddy: `docker-compose.prod.yml` (ohne Coolify).*
+# Kurz: Reihenfolge
+
+```
+1 Hetzner IP
+2 Coolify installieren
+3 DNS api.ballup.net → A → IP (DNS-Verwaltung)
+4 Coolify: Git backend + compose.coolify.yml + Env-Variablen
+5 Coolify: Domain api.ballup.net:8000 + HTTPS + Deploy
+6 /health ok
+7 Supabase SQL import
+8 Flutter API_BASE_URL=https://api.ballup.net
+9 Coden / Redeploy
+10 Supabase aus (später)
+```
+
+---
+
+# Env-Variablen — nochmal klar
+
+| Wo stehen die Werte? | Antwort |
+|---------------------|---------|
+| In `docker-compose.coolify.yml`? | Nur **Namen** wie `${JWT_SECRET}` |
+| Wo eintragen? | **Coolify → Environment Variables** |
+| In Git committen? | **Nein** |
+
+---
+
+# Hilfe
+
+| Thema | Datei |
+|-------|--------|
+| Supabase Export | `backend/scripts/export-from-supabase.md` |
+| Compose Coolify | `backend/docker-compose.coolify.yml` |
+| Backend lokal (optional) | `docker-compose.dev.yml` + `backend/README.md` |
+
+---
+
+*Domain-Beispiel: **ballup.net** → API: **https://api.ballup.net***
