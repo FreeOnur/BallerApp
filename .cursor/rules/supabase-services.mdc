@@ -9,7 +9,8 @@ alwaysApply: false
 ## Client services (`baller_app/lib/supabase/`)
 
 - Pattern: class with `final SupabaseClient _supabase = Supabase.instance.client;`
-- Example `court_services.dart` → `CourtServices.createCourt` inserts into `courts` with keys: `source`, `name`, `lat`, `lng`, `indoor`, `lights`, `has_markings`, `surface`, `hoops`, `address`
+- `court_services.dart` delegates court CRUD to `RepositoryProvider.courts` for dual-mode access
+- Example `CourtServices.createCourt` inserts into `courts` with keys: `source`, `name`, `lat`, `lng`, `indoor`, `lights`, `has_markings`, `surface`, `hoops`, `address`
 - Use `.insert({...}).select('id').single()` and `return res['id'] as String;`
 - Prefer `_supabase.from(...)` consistently inside methods
 - Wrap failures: `try/catch` → `throw Exception('Failed to <action>: $e')` (match `auth_service.dart`)

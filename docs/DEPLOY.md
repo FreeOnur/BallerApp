@@ -137,20 +137,20 @@ Coolify UI:
 2. **+ New Resource** → **Public Repository** (oder Private mit Deploy Key)  
 3. Repository: `https://github.com/FreeOnur/BallerApp`  
 4. Branch: `main` oder `master`  
-5. **Base Directory / Pfad im Repo:**  
-   ```
-   BallerApp/backend
-   ```
-   (Ordner mit `Dockerfile` und `docker-compose.coolify.yml`)
+5. **Base Directory:** **leer** oder `/` (Repo-Root — **nicht** `backend`)
 
 ## 4.2 Docker Compose
 
 | Einstellung | Wert |
 |-------------|------|
 | Build Pack | Docker Compose |
-| Compose-Datei | **`docker-compose.coolify.yml`** |
+| Compose-Datei | **`docker-compose.coolify.yml`** (im **Repo-Root**, nicht `backend/...`) |
 
-**Nicht** `docker-compose.prod.yml` (nur für Setup ohne Coolify).
+**Wichtig:** Liegt die Compose-Datei unter `backend/docker-compose.coolify.yml` und Base Directory ist leer, findet Coolify **kein Dockerfile** → Build schlägt fehl. Nutze die Datei im **Root** (wurde dafür angelegt).
+
+**Alternative:** Base Directory = `backend` → dann `docker-compose.coolify.yml` **in** `backend/` (ohne `backend/`-Prefix im Pfad).
+
+**Nicht** `docker-compose.prod.yml` (nur ohne Coolify).
 
 ### Was die Compose-Datei macht
 
@@ -390,7 +390,7 @@ Dann Supabase-Projekt **pausieren** oder löschen (vorher letztes Backup).
 | Thema | Datei |
 |-------|--------|
 | Supabase Export | `backend/scripts/export-from-supabase.md` |
-| Compose Coolify | `backend/docker-compose.coolify.yml` |
+| Compose Coolify | `docker-compose.coolify.yml` (Repo-Root) |
 | Backend lokal (optional) | `docker-compose.dev.yml` + `backend/README.md` |
 
 ---

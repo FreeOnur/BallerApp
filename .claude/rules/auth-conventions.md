@@ -2,6 +2,8 @@
 paths:
   - baller_app/lib/auth/**
   - baller_app/lib/repositories/**
+  - baller_app/lib/core/api/**
+  - baller_app/lib/core/config/app_config.dart
 ---
 
 # Auth Conventions

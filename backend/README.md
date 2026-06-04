@@ -4,7 +4,8 @@ FastAPI + PostgreSQL/PostGIS. Deploy: **[../docs/DEPLOY.md](../docs/DEPLOY.md)**
 
 | Compose | Use |
 |---------|-----|
-| `docker-compose.coolify.yml` | **Coolify** (recommended) |
+| `../docker-compose.coolify.yml` | **Coolify** (Repo-Root, recommended) |
+| `docker-compose.coolify.yml` | Coolify only if Base Directory = `backend` |
 | `docker-compose.dev.yml` | Local test |
 | `docker-compose.prod.yml` | Manual server + Caddy (no Coolify) |
 
