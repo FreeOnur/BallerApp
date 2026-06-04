@@ -19,9 +19,6 @@
     "sessionEnd": [
       {
         "command": "npx @rely-ai/caliber learn finalize --auto"
-      },
-      {
-        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/brain-export.ps1"
       }
     ]
   }

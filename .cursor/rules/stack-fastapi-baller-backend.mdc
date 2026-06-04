@@ -13,14 +13,13 @@ alwaysApply: true
 - `backend/app/routers/` — `auth`, `courts`, `profiles`, `uploads`
 - `backend/app/security/` — JWT, Argon2
 - `backend/migrations/` — SQL schema
-- `backend/docker-compose.dev.yml` / `docker-compose.prod.yml`
+- `docker-compose.yml` (repo root)
 
 ## Local
 
 ```powershell
-cd backend
-copy .env.example .env
-docker compose -f docker-compose.dev.yml up -d --build
+copy backend\.env.example .env
+docker compose up -d --build
 ```
 
 Docs: `http://localhost:8000/docs`

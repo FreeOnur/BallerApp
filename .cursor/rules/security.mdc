@@ -27,7 +27,7 @@ alwaysApply: false
 ## Backend / Docker
 
 - Postgres not exposed on public internet in production
-- TLS via Caddy (`backend/Caddyfile`)
+- TLS via Coolify reverse proxy
 - Rate-limit login endpoints in production (proxy or app layer)
 
 ## Permissions

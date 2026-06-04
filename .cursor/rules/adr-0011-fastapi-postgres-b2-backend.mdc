@@ -25,7 +25,7 @@ adr-0002-backend-self-host-strategy planned **self-hosted Supabase via Docker**.
 
 **Flutter:** Repository pattern (adr-0008-data-access-repository-pattern-for-portability) with `ApiClient` when `USE_LEGACY_SUPABASE=false`. Default remains legacy Supabase until cutover.
 
-**Password migration:** Supabase password hashes are **not portable** — users reset passwords per cutover runbook (repo: `docs/DEPLOY.md` (auth cutover section)).
+**Password migration:** Supabase password hashes are **not portable** — users reset passwords per cutover runbook (repo: `docker-compose.yml` (repo root) (auth cutover section)).
 
 ## Consequences
 
@@ -37,7 +37,7 @@ adr-0002-backend-self-host-strategy planned **self-hosted Supabase via Docker**.
 
 ## Repo runbooks (how, not duplicated here)
 
-- Hosting checklist: `docs/DEPLOY.md`
+- Hosting checklist: `docker-compose.yml` (repo root)
 - Local API: `BallerApp/backend/README.md`
 - Ops index in vault: baller-app-hosting-runbook
 

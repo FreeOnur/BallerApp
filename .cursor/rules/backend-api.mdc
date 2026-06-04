@@ -8,7 +8,7 @@ alwaysApply: false
 
 - Flutter talks only to `API_BASE_URL` (HTTPS in prod) — never to Postgres directly.
 - Backend: `backend/app/` FastAPI routers `auth`, `courts`, `profiles`, `uploads`.
-- Local dev: `docker compose -f backend/docker-compose.dev.yml up -d`.
+- Local: `docker compose up -d` from repo root.
 
 ## Flutter integration
 

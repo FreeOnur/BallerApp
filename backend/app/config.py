@@ -13,9 +13,9 @@ class Settings(BaseSettings):
 
     b2_key_id: str = ""
     b2_app_key: str = ""
-    b2_bucket: str = "courtfinder-images"
-    b2_endpoint: str = "https://s3.us-west-002.backblazeb2.com"
-    b2_region: str = "us-west-002"
+    b2_bucket: str = "courtfinder-image"
+    b2_endpoint: str = "https://s3.eu-central-003.backblazeb2.com"
+    b2_region: str = "eu-central-003"
 
 
 settings = Settings()

@@ -1,9 +1,0 @@
-{
-  "$schema": "brain-sync v1",
-  "vault_path": "C:/Users/runolion/Documents/Claude/Projects/Obsidian",
-  "repo_root": ".",
-  "cursor_rules_dir": ".cursor/rules",
-  "export_on_session_end": true,
-  "skip_repo_native_rules": true,
-  "notes": "Vault is Layer A (source of truth). Only notes with cursor_rule: true are compiled to .mdc. Repo-native rules (no vault source comment) are never overwritten."
-}

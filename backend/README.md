@@ -1,12 +1,10 @@
-# BallerApp Backend
+# Backend
 
-FastAPI + PostgreSQL/PostGIS. Deploy: **[../docs/DEPLOY.md](../docs/DEPLOY.md)** (Coolify).
+FastAPI + Postgres. Deploy with root `docker-compose.yml` on Coolify.
 
-| Compose | Use |
-|---------|-----|
-| `../docker-compose.coolify.yml` | **Coolify** (Repo-Root, recommended) |
-| `docker-compose.coolify.yml` | Coolify only if Base Directory = `backend` |
-| `docker-compose.dev.yml` | Local test |
-| `docker-compose.prod.yml` | Manual server + Caddy (no Coolify) |
+```bash
+# from repo root
+docker compose up -d --build
+```
 
-Data export: `scripts/export-from-supabase.md`
+Export/import: `scripts/export-from-supabase.md`, `scripts/import-local.ps1`

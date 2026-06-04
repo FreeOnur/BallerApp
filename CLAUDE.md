@@ -26,7 +26,7 @@ Flutter (`baller_app/pubspec.yaml`, SDK `^3.9.0`) · **legacy** `supabase_flutte
 | **Legacy Supabase** | `baller_app/lib/supabase/court_services.dart` — only when `USE_LEGACY_SUPABASE=true` |
 | **Theme** | `baller_app/lib/theme/app_colors.dart` · `app_spacing.dart` · `app_sizes` |
 | **Edge** | `baller_app/supabase/functions/get-upload-url/index.ts` · `config.toml` → `[functions.get-upload-url]` |
-| **Deploy** | `docs/DEPLOY.md` · `docker-compose.coolify.yml` · `docker-compose.dev.yml` |
+| **Deploy** | `docker-compose.yml` (repo root, Coolify) · `docs/DEPLOY.md` |
 | **Import** | `backend/scripts/export-from-supabase.md` |
 
 ## Commands
@@ -50,7 +50,7 @@ cd baller_app && flutter run --dart-define=USE_LEGACY_SUPABASE=true --dart-defin
 ### Backend (local)
 
 ```bash
-cd backend && docker compose -f docker-compose.dev.yml up -d --build
+docker compose up -d --build
 curl -s http://localhost:8000/health
 ```
 
