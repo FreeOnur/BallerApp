@@ -13,7 +13,7 @@ description: PostgreSQL and PostGIS migrations for BallerApp self-hosted backend
 ## Apply locally
 
 ```bash
-docker compose -f backend/docker-compose.dev.yml exec db \
+docker compose exec db \
   psql -U baller -d baller -f /migrations/001_initial.sql
 ```
 

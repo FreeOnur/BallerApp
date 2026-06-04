@@ -56,7 +56,7 @@ class RepositoryProvider {
 ## Instructions
 
 1. **Confirm mode and backend contract**
-   - Read `docs/DEPLOY.md` and the target router in `backend/app/routers/`.
+   - Read `README.md` and the target router in `backend/app/routers/`.
    - Grep existing repos:
 
 ```bash
@@ -166,7 +166,7 @@ final userId = await apiAuth.getUserIdAsync();
 9. **Validate locally**
 
 ```bash
-cd backend && docker compose -f docker-compose.dev.yml up -d --build
+docker compose up -d --build
 curl -s http://localhost:8000/health
 ```
 
@@ -232,7 +232,7 @@ courts = data.map((e) => Court.fromMap(e)).toList();
 ## Common Issues
 
 - **`Connection refused` / `DioException [connection error]` to `10.0.2.2:8000`:**
-  1. Start API: `cd backend && docker compose -f docker-compose.dev.yml up -d --build`
+  1. Start API: `docker compose up -d --build`
   2. Confirm: `curl -s http://localhost:8000/health`
   3. Android emulator uses `10.0.2.2`; iOS simulator uses `http://localhost:8000`; physical device uses your machine's LAN IP in `--dart-define=API_BASE_URL=http://192.168.x.x:8000`
 

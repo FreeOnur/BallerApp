@@ -1,10 +1,10 @@
 ---
 name: postgres-migrations
-description: Authors numbered SQL in `backend/migrations/` for PostGIS schema changes and keeps tables aligned with FastAPI routers (`backend/app/routers/`) and Flutter `Court.fromMap`. Use when user says 'migration', 'add table', 'schema change', 'ALTER TABLE', or edits `001_initial.sql`. Covers dev initdb apply via `docker-compose.dev.yml`, manual prod apply, and Supabase import validation with `backend/scripts/import-local.ps1`. Do NOT use for route-only work, Flutter-only model changes without schema, or Supabase dashboard-only schema.
+description: Authors numbered SQL in `backend/migrations/` for PostGIS schema changes and keeps tables aligned with FastAPI routers (`backend/app/routers/`) and Flutter `Court.fromMap`. Use when user says 'migration', 'add table', 'schema change', 'ALTER TABLE', or edits `001_initial.sql`. Covers dev initdb apply via `docker-compose.yml`, manual prod apply, and Supabase import validation with `backend/scripts/import-local.ps1`. Do NOT use for route-only work, Flutter-only model changes without schema, or Supabase dashboard-only schema.
 paths:
   - backend/migrations/**/*.sql
-  - backend/docker-compose.dev.yml
-  - backend/docker-compose.prod.yml
+  - docker-compose.yml (repo root)
+  - docker-compose.yml (repo root)
   - backend/scripts/import-local.ps1
   - backend/scripts/export-from-supabase.md
 ---
@@ -16,9 +16,9 @@ paths:
 - **Do not apply schema only in the Supabase dashboard** without the same change in `backend/migrations/`. Hosted and self-hosted must stay aligned for `courts`, `profiles`, `court_images`.
 - **Baseline:** read `backend/migrations/001_initial.sql` before any new migration. It defines extensions (`postgis`, `uuid-ossp`) and tables `users`, `refresh_tokens`, `profiles`, `courts`, `court_images`.
 - **Column naming:** **snake_case** only (`has_markings`, `skill_level`, `created_at`). Match FastAPI SQL in `backend/app/routers/` and Flutter `Court.fromMap` map keys (`lat`, `lng`, `has_markings`).
-- **Dev auto-apply is first-boot only:** `backend/docker-compose.dev.yml` mounts `backend/migrations/` into `/docker-entrypoint-initdb.d/`. Postgres runs those files **only when the `pgdata_dev` volume is empty**. Existing volumes need manual `psql` (Step 5B).
-- **Production:** `backend/docker-compose.prod.yml` does **not** mount migrations. Apply SQL manually on the prod `db` service after deploy.
-- **Auth cutover:** Supabase hosted user password hashes **cannot** be imported into self-hosted `users.password_hash` (Argon2id). See `docs/DEPLOY.md` and `backend/scripts/export-from-supabase.md`.
+- **Dev auto-apply is first-boot only:** `docker-compose.yml (repo root)` mounts `backend/migrations/` into `/docker-entrypoint-initdb.d/`. Postgres runs those files **only when the `pgdata_dev` volume is empty**. Existing volumes need manual `psql` (Step 5B).
+- **Production:** `docker-compose.yml (repo root)` does **not** mount migrations. Apply SQL manually on the prod `db` service after deploy.
+- **Auth cutover:** Supabase hosted user password hashes **cannot** be imported into self-hosted `users.password_hash` (Argon2id). See `README.md` and `backend/scripts/export-from-supabase.md`.
 - **DB image:** PostGIS-enabled Postgres image in both compose files — required for `CREATE EXTENSION postgis`.
 
 ### Baseline tables (from `001_initial.sql`)
@@ -101,7 +101,7 @@ ALTER TABLE courts ADD COLUMN IF NOT EXISTS notes TEXT;
    - If `profiles` columns change: update Pydantic models and upsert in `backend/app/routers/profiles.py`.
    - If exposed to the app: extend `factory Court.fromMap` in `baller_app/lib/models/Court.dart` with `map['snake_case_key']`.
    - If legacy Supabase mode must stay aligned: update insert maps in `baller_app/lib/repositories/court_repository.dart`.
-   - **Verify:** `cd backend && docker compose -f docker-compose.dev.yml up -d` then `curl -s http://localhost:8000/health` returns `{"status":"ok"...}` after router changes.
+   - **Verify:** `docker compose up -d` then `curl -s http://localhost:8000/health` returns `{"status":"ok"...}` after router changes.
 
 5. **Apply migration locally**
 
@@ -109,23 +109,23 @@ ALTER TABLE courts ADD COLUMN IF NOT EXISTS notes TEXT;
 
 ```bash
 cd backend
-docker compose -f docker-compose.dev.yml down -v
-docker compose -f docker-compose.dev.yml up -d --build
+docker compose -f docker-compose.yml down -v
+docker compose -f docker-compose.yml up -d --build
 ```
 
    **B — Existing `pgdata_dev` volume (incremental file from Step 2):**
 
 ```powershell
 cd backend
-Get-Content migrations\002_your_change.sql | docker compose -f docker-compose.dev.yml exec -T db psql -U baller -d baller
+Get-Content migrations\002_your_change.sql | docker compose -f docker-compose.yml exec -T db psql -U baller -d baller
 ```
 
    - **Verify:**
 
 ```bash
 cd backend
-docker compose -f docker-compose.dev.yml exec db psql -U baller -d baller -c "\dt"
-docker compose -f docker-compose.dev.yml exec db psql -U baller -d baller -c "\d courts"
+docker compose -f docker-compose.yml exec db psql -U baller -d baller -c "\dt"
+docker compose -f docker-compose.yml exec db psql -U baller -d baller -c "\d courts"
 ```
 
    - Confirm new table/column appears before Step 6.
@@ -147,16 +147,16 @@ UNION ALL SELECT 'profiles', COUNT(*) FROM profiles
 UNION ALL SELECT 'court_images', COUNT(*) FROM court_images;
 ```
 
-   - **Verify:** `profiles.id` values either have a matching `users.id` after cutover registration, or you are still in legacy Supabase-auth mode per `docs/DEPLOY.md`.
+   - **Verify:** `profiles.id` values either have a matching `users.id` after cutover registration, or you are still in legacy Supabase-auth mode per `README.md`.
 
 7. **Production apply (uses Step 3 file; manual — no initdb mount)**
 
 ```powershell
 cd backend
-Get-Content migrations\002_your_change.sql | docker compose -f docker-compose.prod.yml exec -T db psql -U baller -d baller
+Get-Content migrations\002_your_change.sql | docker compose -f docker-compose.yml exec -T db psql -U baller -d baller
 ```
 
-   - Take backup first (`docs/DEPLOY.md` pg_dump cron pattern).
+   - Take backup first (`README.md` pg_dump cron pattern).
    - **Verify:** `curl -f https://api.yourdomain.com/health` and spot-check affected endpoints in `/docs`.
 
 ## Examples
@@ -172,7 +172,7 @@ Get-Content migrations\002_your_change.sql | docker compose -f docker-compose.pr
 
 ```powershell
 cd backend
-Get-Content migrations\002_court_notes.sql | docker compose -f docker-compose.dev.yml exec -T db psql -U baller -d baller
+Get-Content migrations\002_court_notes.sql | docker compose -f docker-compose.yml exec -T db psql -U baller -d baller
 ```
 
 4. `curl -s http://localhost:8000/docs` → exercise `POST /courts` with Bearer token.
@@ -193,14 +193,14 @@ Get-Content migrations\002_court_notes.sql | docker compose -f docker-compose.de
 ## Common Issues
 
 - **`relation "courts" already exists` on fresh install** — You edited `001_initial.sql` instead of adding `002_*.sql`. Restore baseline from git; put additive DDL in a new numbered file.
-- **New migration never runs after `docker compose up`** — `pgdata_dev` already initialized. Use Step 5B `psql` pipe, or `docker compose -f docker-compose.dev.yml down -v` (destroys local data).
-- **`relation "courts" does not exist`** — Migrations never applied. Recreate dev DB (Step 5A) or apply manually: `docker compose -f docker-compose.dev.yml exec db psql -U baller -d baller -f /docker-entrypoint-initdb.d/001_initial.sql`.
+- **New migration never runs after `docker compose up`** — `pgdata_dev` already initialized. Use Step 5B `psql` pipe, or `docker compose -f docker-compose.yml down -v` (destroys local data).
+- **`relation "courts" does not exist`** — Migrations never applied. Recreate dev DB (Step 5A) or apply manually: `docker compose -f docker-compose.yml exec db psql -U baller -d baller -f /docker-entrypoint-initdb.d/001_initial.sql`.
 - **`ERROR: extension "postgis" is not available`** — DB service must use PostGIS image from compose files, not plain `postgres` image.
 - **`UndefinedColumn: column "notes" of relation "courts" does not exist`** in API logs — Router references column before migration applied. Run Step 5B before testing endpoints.
 - **`insert or update on table "court_images" violates foreign key constraint`** on import — Import `courts` before `court_images`; ensure UUIDs match `backend/scripts/export-from-supabase.md` table list.
 - **`Key (id)=(...) is not present in table "users"` when inserting `profiles`** — After self-hosted cutover, each `profiles.id` needs a `users` row (register flow in `backend/app/routers/auth.py` inserts both). Legacy import: import profiles only during hybrid window (`AUTH_CUTOVER.md`).
 - **`column "has_markings" does not exist`** — Hosted DB missing column; add migration file, apply to self-hosted DB, then re-export — do not rename to camelCase in SQL.
-- **`FATAL: password authentication failed for user "baller"`** — Match `POSTGRES_USER`/`POSTGRES_PASSWORD` in `backend/.env` with `docker compose -f docker-compose.dev.yml exec db psql -U baller -d baller`.
-- **`Connection refused on port 5432`** — Start DB: `cd backend && docker compose -f docker-compose.dev.yml up -d db`; wait for healthcheck: `docker compose -f docker-compose.dev.yml ps`.
+- **`FATAL: password authentication failed for user "baller"`** — Match `POSTGRES_USER`/`POSTGRES_PASSWORD` in `backend/.env` with `docker compose -f docker-compose.yml exec db psql -U baller -d baller`.
+- **`Connection refused on port 5432`** — Start DB: `docker compose up -d db`; wait for healthcheck: `docker compose -f docker-compose.yml ps`.
 - **Prod schema drift** — production compose has no migrations volume; run Step 7 manually after each new numbered SQL file.
-- **Supabase passwords do not work on API login** — Expected; users need password reset on API per `docs/DEPLOY.md`, not a migration fix.
+- **Supabase passwords do not work on API login** — Expected; users need password reset on API per `README.md`, not a migration fix.

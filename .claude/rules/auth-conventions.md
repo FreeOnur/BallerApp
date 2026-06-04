@@ -21,4 +21,4 @@ paths:
 
 ## Cutover
 
-- See `docs/DEPLOY.md` — passwords not portable from Supabase.
+- See root `README.md` (deploy section) — passwords not portable from Supabase.

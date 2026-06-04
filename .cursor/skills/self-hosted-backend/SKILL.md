@@ -1,35 +1,26 @@
 ---
 name: self-hosted-backend
-description: BallerApp self-hosted API on Hetzner CPX22 with PostgreSQL+PostGIS in Docker. Use when adding REST endpoints, migrating off Supabase hosted DB, or editing backend/ and docker-compose files. Do NOT add Supabase client calls for new game/court/profile data — use lib/repositories/ and the FastAPI backend instead.
+description: BallerApp self-hosted API on Hetzner with Coolify and docker-compose.yml at repo root.
 ---
 
 # Self-Hosted Backend (BallerApp)
 
 ## Architecture
 
-- **API**: `backend/app/` (FastAPI) — sole DB access; Flutter never connects to Postgres directly.
-- **DB**: PostgreSQL 16 + PostGIS in Docker (`backend/docker-compose.dev.yml`).
-- **Deploy**: `backend/docker-compose.prod.yml` + `backend/Caddyfile` on Hetzner CPX22.
-- **Flutter flag**: `USE_LEGACY_SUPABASE` dart-define; default `true` until cutover.
+- **API**: `backend/app/` (FastAPI)
+- **Deploy**: `docker-compose.yml` at repo root via Coolify
+- **Flutter**: `--dart-define=USE_LEGACY_SUPABASE=false` + `API_BASE_URL=https://api.ballup.net`
 
-## Critical
-
-- New features: add route in `backend/app/routers/`, migration in `backend/migrations/`, repository in `baller_app/lib/repositories/`.
-- Secrets only in `.env` / server env — never commit `JWT_SECRET`, DB passwords, B2 keys.
-- Match existing table shapes: `profiles`, `courts`, `court_images` (see `backend/migrations/001_initial.sql`).
-
-## Local dev
+## Local
 
 ```bash
-cd backend
-cp .env.example .env
-docker compose -f docker-compose.dev.yml up -d
-# API at http://localhost:8000/docs
+docker compose up -d --build
 ```
 
-## Cutover checklist
+## Cutover
 
-1. Export Supabase data (`backend/scripts/export-from-supabase.md`).
-2. Import into local/prod Postgres (`backend/scripts/import-local.ps1`).
-3. Run API + smoke-test `/health`, `/auth/login`, `/courts`.
-4. Flutter: `--dart-define=API_BASE_URL=... --dart-define=USE_LEGACY_SUPABASE=false`.
+1. `backend/scripts/export-from-supabase.md`
+2. `backend/scripts/import-local.ps1`
+3. Coolify env: `POSTGRES_*`, `JWT_SECRET`, `B2_*` (bucket `courtfinder-image`)
+
+See root `README.md`.

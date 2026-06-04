@@ -10,7 +10,7 @@ paths:
   - baller_app/lib/pages/AuthenthicationPage/**
   - backend/app/routers/auth.py
   - backend/app/dependencies.py
-  - docs/DEPLOY.md
+  - README.md
 ---
 # Auth Flow
 
@@ -21,9 +21,9 @@ paths:
 - **Repository selection is centralized:** `baller_app/lib/repositories/repository_provider.dart` picks `SupabaseAuthRepository` vs `ApiAuthRepository`. Do not instantiate auth repos in widgets.
 - **Tokens:** API mode stores `access_token`, `refresh_token`, `user_id` in `FlutterSecureStorage` via `baller_app/lib/core/api/token_storage.dart`. Never use `SharedPreferences` for tokens.
 - **Legacy startup:** when `USE_LEGACY_SUPABASE=true`, `main.dart` requires `SUPABASE_URL` + `SUPABASE_ANON_KEY` or throws `StateError('USE_LEGACY_SUPABASE=true requires SUPABASE_URL and SUPABASE_ANON_KEY dart-defines.')`. API mode does **not** call `Supabase.initialize`.
-- **Password reset:** `AuthService.resetPasswordForEmail` is Supabase-only today; API mode throws `UnsupportedError('Use API forgot-password when USE_LEGACY_SUPABASE=false')` until `POST /auth/forgot-password` exists (`docs/DEPLOY.md`).
+- **Password reset:** `AuthService.resetPasswordForEmail` is Supabase-only today; API mode throws `UnsupportedError('Use API forgot-password when USE_LEGACY_SUPABASE=false')` until `POST /auth/forgot-password` exists (`README.md`).
 - **Token refresh gap:** backend exposes `POST /auth/refresh` in `backend/app/routers/auth.py`; Flutter `ApiClient` has request interceptor only — no 401 refresh retry yet. Add refresh in `ApiClient` / `ApiAuthRepository`, not ad-hoc per screen.
-- **Cutover:** Supabase password hashes are not portable (`docs/DEPLOY.md`). Migrated users need a new password via forgot-password flow.
+- **Cutover:** Supabase password hashes are not portable (`README.md`). Migrated users need a new password via forgot-password flow.
 
 ### Mode matrix
 
@@ -41,7 +41,7 @@ Login/register/refresh JSON keys: `access_token`, `refresh_token`, `user_id` (sn
 ### 1. Confirm mode and backend before editing Dart
 
 ```bash
-cd backend && docker compose -f docker-compose.dev.yml up -d --build
+docker compose up -d --build
 curl -s http://localhost:8000/health
 ```
 
@@ -203,7 +203,7 @@ cd baller_app && flutter test
 ### User: "Switch login to self-hosted JWT"
 
 **Actions:**
-1. Start API (`docker compose -f docker-compose.dev.yml up -d`).
+1. Start API (`docker compose up -d`).
 2. Confirm `RepositoryProvider.auth` resolves to `ApiAuthRepository` when `USE_LEGACY_SUPABASE=false`.
 3. Run app with `API_BASE_URL=http://10.0.2.2:8000`.
 4. Login via `LoginPage` → tokens in `TokenStorage` → `AuthGate` `_reload` → `MainPage` if `/profiles/me` succeeds.
@@ -233,11 +233,11 @@ cd baller_app && flutter test
 
 - **`StateError: USE_LEGACY_SUPABASE=true requires SUPABASE_URL and SUPABASE_ANON_KEY`** — pass both dart-defines or set `USE_LEGACY_SUPABASE=false` for API-only dev.
 - **`UnsupportedError: Use API forgot-password when USE_LEGACY_SUPABASE=false`** — expected until `AuthService.resetPasswordForEmail` calls new API; legacy reset uses `Supabase.instance.client.auth.resetPasswordForEmail` only.
-- **`Connection refused` / Dio connection errors on login** — API not reachable: `docker compose -f backend/docker-compose.dev.yml ps`; emulator must use `http://10.0.2.2:8000`, not `localhost`.
+- **`Connection refused` / Dio connection errors on login** — API not reachable: `docker compose ps`; emulator must use `http://10.0.2.2:8000`, not `localhost`.
 - **`401 Unauthorized` on `/profiles/me` after login** — access token missing: confirm `_persistTokens` ran; `ApiClient` interceptor reads `TokenStorage.getAccessToken()`.
 - **`type 'Null' is not a subtype of type 'String'` in `_persistTokens`** — API response missing `access_token` / `refresh_token` / `user_id`; align client with `TokenResponse` in `backend/app/routers/auth.py`.
 - **`409 Conflict` / `Email already registered` on register** — duplicate email in `users` table; user should login instead.
-- **`401 Invalid credentials` on login** — wrong password or user only exists in Supabase (not migrated to `users`); see `docs/DEPLOY.md`.
+- **`401 Invalid credentials` on login** — wrong password or user only exists in Supabase (not migrated to `users`); see `README.md`.
 - **Logged in but gate shows `LoginPage` (API)** — `onAuthSuccess` not passed: `AuthGate` must use `LoginPage(onAuthSuccess: _reload)`; signing in without reload leaves stale `FutureBuilder`.
 - **`getCurrentUserId()` always null in API mode** — by design; use `AuthService.resolveUserId()` or `ApiAuthRepository.getUserIdAsync()`.
 - **Sign-up works but profile step skipped unexpectedly** — backend register inserts `profiles` row; `hasProfile` is true when `/profiles/me` returns 200. Adjust `hasProfile` logic only if product requires empty username to mean incomplete.

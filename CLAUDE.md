@@ -11,8 +11,6 @@ Flutter (`baller_app/pubspec.yaml`, SDK `^3.9.0`) · **legacy** `supabase_flutte
 @./.cursor/project/architecture.md
 @./.cursor/project/tech_stack.md
 @./.cursor/project/product.md
-@./docs/DEPLOY.md
-
 | Layer | Paths |
 |-------|-------|
 | **Entry** | `baller_app/lib/main.dart` → `BadwordFilter.loadWords()` (`services/badword_filter.dart`) → optional Supabase init → `AuthGate()` |
@@ -26,7 +24,7 @@ Flutter (`baller_app/pubspec.yaml`, SDK `^3.9.0`) · **legacy** `supabase_flutte
 | **Legacy Supabase** | `baller_app/lib/supabase/court_services.dart` — only when `USE_LEGACY_SUPABASE=true` |
 | **Theme** | `baller_app/lib/theme/app_colors.dart` · `app_spacing.dart` · `app_sizes` |
 | **Edge** | `baller_app/supabase/functions/get-upload-url/index.ts` · `config.toml` → `[functions.get-upload-url]` |
-| **Deploy** | `docker-compose.yml` (repo root, Coolify) · `docs/DEPLOY.md` |
+| **Deploy** | `docker-compose.yml` (repo root, Coolify) · see root `README.md` |
 | **Import** | `backend/scripts/export-from-supabase.md` |
 
 ## Commands
