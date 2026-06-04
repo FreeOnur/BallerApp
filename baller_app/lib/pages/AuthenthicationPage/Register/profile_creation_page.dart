@@ -11,7 +11,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileCreationPage extends StatefulWidget {
-  const ProfileCreationPage({super.key});
+  const ProfileCreationPage({super.key, this.onProfileComplete});
+
+  final VoidCallback? onProfileComplete;
 
   @override
   State<ProfileCreationPage> createState() => _ProfileCreationPageState();
@@ -74,10 +76,14 @@ class _ProfileCreationPageState extends State<ProfileCreationPage> {
         skillLevel: selectedLevel,
       );
       if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MainPage()),
-        );
+        if (widget.onProfileComplete != null) {
+          widget.onProfileComplete!();
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainPage()),
+          );
+        }
       }
     } catch (e) {
       if (mounted) {

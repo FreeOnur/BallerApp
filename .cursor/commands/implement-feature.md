@@ -9,14 +9,15 @@ Steps:
    - project/tech_stack.md
    - project/user_stories.md
    - project/product.md
+2. Don't break the rules written in the folder:
+   - rules
+3. Identify the feature that the user requested.
 
-2. Identify the feature that the user requested.
+4. Analyze the existing codebase.
 
-3. Analyze the existing codebase.
+5. Implement the feature following the architecture and coding standards.
 
-4. Implement the feature following the architecture and coding standards.
-
-5. Ensure the implementation includes:
+6. Ensure the implementation includes:
 
 - UI components
 - business logic
@@ -24,11 +25,11 @@ Steps:
 - state management
 - error handling
 
-6. Follow the project's Flutter architecture and best practices.
+7. Follow the project's Flutter architecture and best practices.
 
-7. Optimize performance when possible.
+8. Optimize performance when possible.
 
-8. After implementation:
+9. After implementation:
 
 Provide a summary with:
 

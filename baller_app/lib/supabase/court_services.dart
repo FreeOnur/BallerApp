@@ -1,7 +1,11 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:baller_app/repositories/court_repository.dart';
+import 'package:baller_app/repositories/repository_provider.dart';
 
 class CourtServices {
-  final SupabaseClient _supabase = Supabase.instance.client;
+  CourtServices({CourtRepository? courtRepository})
+      : _courts = courtRepository ?? RepositoryProvider.courts;
+
+  final CourtRepository _courts;
 
   Future<String> createCourt({
     required String name,
@@ -13,24 +17,17 @@ class CourtServices {
     required String groundType,
     required int hoops,
     required String address,
-  }) async {
-    final res = await Supabase.instance.client
-        .from('courts')
-        .insert({
-          'source': 'community',
-          'name': name,
-          'lat': latitude,
-          'lng': longitude,
-          'indoor': indoor,
-          'lights': hasLights,
-          'has_markings': hasCourtMarkings,
-          'surface': groundType,
-          'hoops': hoops,
-          'address': address,
-        })
-        .select('id')
-        .single();
-
-    return res['id'] as String;
+  }) {
+    return _courts.createCourt(
+      name: name,
+      latitude: latitude,
+      longitude: longitude,
+      indoor: indoor,
+      hasLights: hasLights,
+      hasCourtMarkings: hasCourtMarkings,
+      groundType: groundType,
+      hoops: hoops,
+      address: address,
+    );
   }
 }

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "command": "npx @rely-ai/caliber learn observe"
+      }
+    ],
+    "postToolUseFailure": [
+      {
+        "command": "npx @rely-ai/caliber learn observe --failure"
+      }
+    ],
+    "userPromptSubmit": [
+      {
+        "command": "npx @rely-ai/caliber learn observe --prompt"
+      }
+    ],
+    "sessionEnd": [
+      {
+        "command": "npx @rely-ai/caliber learn finalize --auto"
+      },
+      {
+        "command": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/brain-export.ps1"
+      }
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+---
+description: Auth gate, AuthService, and repository patterns (Supabase legacy + API JWT)
+globs: baller_app/lib/auth/**,baller_app/lib/repositories/**,baller_app/lib/core/api/**
+alwaysApply: false
+---
+
+## Mode selection
+
+- `AppConfig.useLegacySupabase` (dart-define, default `true`):
+  - **true**: Supabase Auth + `SupabaseAuthRepository`
+  - **false**: API JWT + `ApiAuthRepository` + `TokenStorage`
+
+## AuthGate (`auth_gate.dart`)
+
+- Root widget from `main.dart` → `MaterialApp(home: AuthGate())`
+- Legacy: `onAuthStateChange` StreamBuilder
+- API: session check via `AuthRepository.hasSession()` then profile via `ProfileRepository`
+- While loading → `CircularProgressIndicator`
+- Profile exists → home; else → profile creation; no session → login
+
+## AuthService (`auth_service.dart`)
+
+- Delegates to `AuthRepository` — do not call Supabase directly in UI
+- `signInWithEmailPassword`, `signUp`, `signOut`, `createProfile`, `getCurrentUserEmail`
+- API mode returns `AuthResult` with user id string (not `AuthResponse`)
+
+## Token storage (API mode)
+
+- `TokenStorage`: `access_token`, `refresh_token`, `user_id` in `flutter_secure_storage`
+- `ApiClient` interceptor attaches `Authorization: Bearer`
+
+## Do not
+
+- Store tokens in `SharedPreferences`
+- Duplicate profile creation outside repository layer
+- Bypass `AuthGate` for authenticated screens

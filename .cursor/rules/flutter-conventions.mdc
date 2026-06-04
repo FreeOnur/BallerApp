@@ -1,0 +1,27 @@
+---
+description: Flutter widget, model, and theme conventions
+globs: baller_app/lib/**/*.dart
+alwaysApply: false
+---
+
+## Widget structure
+
+- Prefer `StatefulWidget` + private `State` for data-bound UI; load async work in `initState`.
+- Async shell: `baller_app/lib/auth/auth_gate.dart` (loading / error / empty branches).
+- Theme: `app_colors.dart` · `app_spacing.dart` · `app_sizes` — use `AppColors` / `AppSpacing`.
+
+## Models (`baller_app/lib/models/`)
+
+- Follow `Court.dart`: `final` fields, `factory Model.fromMap(Map<String, dynamic> map)`.
+- Read snake_case DB keys (`lat`, `lng`, `has_markings`, `lights`, `surface`).
+- Cast: `(map['lat'] as num).toDouble()`; booleans with `?? false` defaults.
+
+## Data access
+
+- Use `RepositoryProvider.courts` / `.profiles` / `.auth` — not new Supabase calls when `USE_LEGACY_SUPABASE=false`.
+- Repositories return `Map<String, dynamic>` lists; map to models at call site: `Court.fromMap(e)`.
+
+## Services (`baller_app/lib/services/`)
+
+- `load_position.dart` — `LocationService.loadPosition()` only.
+- `badword_filter.dart` — call `BadwordFilter.loadWords()` in `main.dart` before `runApp`.

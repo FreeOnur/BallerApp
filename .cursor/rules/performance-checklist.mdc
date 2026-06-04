@@ -1,0 +1,54 @@
+---
+description: Performance Checklist
+globs: lib/**/*.dart
+alwaysApply: false
+---
+
+
+# Performance Checklist
+
+## Lists
+
+- `ListView.builder` / `SliverList.builder` for any list past ~20 items. Never spread into a Column.
+- `AnimatedList` only when needed.
+- For chat: `reverse: true` + `addAutomaticKeepAlives: false`.
+
+## Images
+
+- `cached_network_image` for every network image.
+- Specify `width` and `height` to enable memory cache cap.
+- Use `memCacheWidth` and `memCacheHeight` for thumbnails.
+
+## Rebuilds
+
+- `const` constructors wherever the analyzer suggests.
+- Riverpod `select()` for fine-grained subscriptions.
+- Scoped `Consumer` widgets to wrap only the rebuilding subtree.
+- Profile with DevTools rebuild overlay on list-heavy screens.
+
+## Layout
+
+- Avoid `IntrinsicHeight` / `IntrinsicWidth` — O(n²) in tree depth.
+- `LayoutBuilder` only when truly needed.
+
+## Animations
+
+- Animate `transform` + `opacity` only.
+- Long animations: use `RepaintBoundary` to avoid re-painting siblings.
+
+## Bundle
+
+- Tree-shake unused icon fonts: `--tree-shake-icons`.
+- Audit `flutter build apk --analyze-size` periodically.
+- Defer heavy libs with deferred-import where possible.
+
+## Network
+
+- Debounce search inputs (300ms).
+- Cache repository reads with TTL on cold-load.
+- Realtime subscriptions disposed on screen leave.
+
+
+<!-- source: vault/02_Areas\Coding-Practices\performance-checklist.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

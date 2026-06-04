@@ -1,0 +1,100 @@
+{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx @rely-ai/caliber refresh --quiet",
+            "description": "Caliber: auto-refresh docs on session end"
+          },
+          {
+            "type": "command",
+            "command": "npx @rely-ai/caliber learn finalize --auto",
+            "description": "Caliber: finalize session learnings"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/caliber-session-freshness.sh",
+            "description": "Caliber: check config freshness on session start"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/caliber-freshness-notify.sh",
+            "description": "Caliber: warn when agent configs are stale"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx @rely-ai/caliber learn observe",
+            "description": "Caliber: record tool usage"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx @rely-ai/caliber learn observe --failure",
+            "description": "Caliber: record tool failure"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx @rely-ai/caliber learn observe --prompt",
+            "description": "Caliber: record user prompt"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/caliber-check-sync.sh",
+            "description": "Caliber: offer setup if not configured"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(npm run *)",
+      "Bash(npx *)"
+    ]
+  }
+}

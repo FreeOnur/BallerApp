@@ -8,7 +8,7 @@ Follow this workflow when using AI or making changes. Rules in `.cursor/rules/` 
 ## Before Coding
 1. Always read project files before implementing features.
 Follow project vision and user stories strictly.
-2. **Read rules** — Skim `.cursor/rules/00_global_rules.md` through `10_performance_rules.md`. Lower number wins on conflict.
+2. **Read rules** — Skim `.cursor/rules/00_global_rules.md` through `12_stitch_ui_rule.md`. Lower number wins on conflict.
 3. **Analyze code** — Locate existing logic and UI; avoid duplicating or rewriting working code.
 4. **Plan small change** — Prefer minimal, safe edits. When unsure, ask before large refactors.
 

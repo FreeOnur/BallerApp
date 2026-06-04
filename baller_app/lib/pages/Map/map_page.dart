@@ -6,7 +6,7 @@ import 'package:baller_app/widgets/popups/create_map_window.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:baller_app/repositories/repository_provider.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({Key? key}) : super(key: key);
@@ -52,8 +52,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<void> fetchCourts() async {
-    final res = await Supabase.instance.client.from('courts').select().eq('status', 'approved');
-    final data = res as List;
+    final data = await RepositoryProvider.courts.fetchApprovedCourts();
 
     courts = data.map((e) => Court.fromMap(e)).toList();
     filteredCourts = courts;

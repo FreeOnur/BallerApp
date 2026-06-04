@@ -1,0 +1,61 @@
+---
+description: Clean Code Checklist
+globs: lib/**/*.dart
+alwaysApply: true
+---
+
+
+# Clean Code Checklist
+
+## Naming
+
+- Names reveal intent. `activeUsersThisWeek` not `users`.
+- Units in variable names: `expiryInSeconds`, `widthPx`, `priceCents`.
+- Drop noise words: `data`, `info`, `manager`, `helper`, `util`.
+- Pluralize collections: `games`, not `gameList`.
+- Constants in SCREAMING_SNAKE_CASE for top-level, or `static const` on a class.
+- Booleans answer yes/no: `isLoading`, `hasError`, `canJoin`.
+
+## Functions
+
+- Do ONE thing. ≤20 lines.
+- ≤3 positional arguments. Use named params past that.
+- No flag arguments — split into two functions.
+- Early returns / guard clauses. Nesting depth ≤2.
+- Pure where possible — side-effects at the edges.
+
+## Errors
+
+- Never silently swallow. No empty `catch (_) {}`.
+- Carry context: `throw GameJoinFailed(gameId: id, reason: e)`.
+- AsyncValue.error() with original error + stack for Riverpod.
+- User-facing errors in brand voice. Never raw exception strings.
+
+## Magic numbers
+
+- Zero magic numbers. Hoist to `static const` with intent-revealing name.
+
+## Comments
+
+- Comments explain *why*, not *what*. The code says what.
+- TODO must include a name + date or issue number: `// TODO(onur, 2026-06): `.
+
+## Flutter-specific
+
+- Stateless widgets by default.
+- Side-effects in Notifier.build / behind a controller — never in `build()`.
+- Repository pattern enforced (adr-0008-data-access-repository-pattern-for-portability).
+- `const` constructors wherever the analyzer suggests.
+- No `print()` — use `dart:developer log()`.
+
+## Hard NO
+
+- `dynamic` unless platform interop forces it.
+- `// ignore: ...` without a comment explaining why.
+- Mutable global state.
+- God-classes (>300 lines) — split.
+
+
+<!-- source: vault/02_Areas\Coding-Practices\clean-code-checklist.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

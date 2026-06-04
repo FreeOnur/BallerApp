@@ -1,0 +1,50 @@
+---
+description: Testing Strategy
+globs: test/**/*.dart,integration_test/**/*.dart
+alwaysApply: false
+---
+
+
+# Testing Strategy
+
+## Pyramid
+
+- Many fast **unit tests** — pure functions, reducers, state machines, mappers.
+- Fewer **widget tests** (`pumpWidget`) — non-trivial widgets, edge cases.
+- Very few **integration / E2E tests** (`patrol`) — critical user flows (signup → join game → chat → leave).
+
+## What to test
+
+- Pure functions: always.
+- Notifier state machines: always.
+- Widgets with conditional rendering / interaction: yes.
+- Repository implementations: yes, with mocked Supabase client (mocktail).
+- Supabase RPCs: pgTAP or lightweight Dart integration tests.
+
+## What NOT to test
+
+- Trivial getters/setters.
+- Third-party internals.
+- Implementation details (e.g., "this method calls that method twice" — brittle).
+
+## Style
+
+- AAA: Arrange / Act / Assert with blank-line separators visible.
+- File name: `feature_test.dart` colocated with source.
+- Group with `group()`, name like a sentence ("GameRepository.joinGame, when game is full, throws GameFullException").
+- Mock sparingly. Heavy mocking = tight coupling.
+
+## Tools
+
+- `flutter_test` + `mocktail` + `integration_test` + `patrol`.
+- Patrol handles native permissions, deep links, WebViews.
+
+## CI
+
+- Unit + widget tests on every PR.
+- Integration suite on `main` push only (slow).
+
+
+<!-- source: vault/02_Areas\Coding-Practices\testing-strategy.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

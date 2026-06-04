@@ -1,0 +1,23 @@
+---
+description: Testing conventions for Playwright e2e and Flutter unit tests
+globs: **/*.test.ts,**/*.spec.ts,baller_app/test/**
+alwaysApply: false
+---
+
+## Flutter
+
+```bash
+cd baller_app && flutter analyze
+cd baller_app && flutter test
+```
+
+- Snapshot may lack `baller_app/test/` — add `test/` before widget tests
+- Model tests: `Court.fromMap` round-trip using sample `courts` row maps (no production DB)
+- Native smoke: `baller_app/ios/RunnerTests/RunnerTests.swift` · `macos/RunnerTests/RunnerTests.swift`
+- Mock `SupabaseClient` in unit tests; never hit prod project `vsqd...supabase.co`
+
+## Playwright
+
+- DevDep: root `package.json` → `@playwright/test`
+- Run: `npx playwright test` (add `playwright.config.ts` + specs when introducing e2e)
+- UI automation MCP: `.cursor/mcp.json` → `browser` server (`@playwright/mcp`)

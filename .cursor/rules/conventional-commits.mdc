@@ -1,0 +1,54 @@
+---
+description: Conventional Commits
+globs: **/*
+alwaysApply: true
+---
+
+
+# Conventional Commits
+
+## Format
+
+`<type>(<scope>): <description>`
+
+## Types
+
+- `feat` — new feature
+- `fix` — bug fix
+- `refactor` — code change that's neither feature nor fix
+- `perf` — performance
+- `docs` — documentation
+- `test` — adds or fixes tests
+- `build` — build system, dependencies
+- `ci` — CI config
+- `chore` — everything else (housekeeping)
+
+## Rules
+
+- Description in imperative mood: "add", "fix", "refactor", not "added".
+- Header ≤50 chars.
+- Body explains *why*, not *what*. Wrap at 72.
+- Breaking change: `feat!:` or `BREAKING CHANGE:` footer.
+- Reference brain notes in body when relevant: `Following adr-0008-data-access-repository-pattern-for-portability.`
+
+## Examples (Baller App)
+
+- `feat(find-a-game): add lock-with-code on private games`
+- `fix(chat): debounce typing indicator`
+- `refactor(supabase): extract realtime channel hook`
+- `perf(map): isolate marker clustering above 200 markers`
+- `docs(adr): accept ADR-0005 ranked vs unranked architecture`
+- `test(game-repo): cover join concurrency edge case`
+- `chore: bump flutter_map to 7.0.0`
+
+## Anti-patterns
+
+- "misc fixes", "wip", "updates"
+- Sentence-case past tense ("Added thing.")
+- Header > 50 chars
+- No scope when scope is obvious
+
+
+<!-- source: vault/02_Areas\Coding-Practices\conventional-commits.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

@@ -1,0 +1,22 @@
+---
+description: Flutter repository layer (API JWT vs legacy Supabase)
+globs: baller_app/lib/repositories/**,baller_app/lib/auth/**
+alwaysApply: false
+---
+
+## Provider
+
+- `repository_provider.dart` — single entry for auth/court/profile repos.
+- API mode (`USE_LEGACY_SUPABASE=false`): `ApiAuthRepository`, `CourtRepository`, `ProfileRepository`.
+- Legacy: `SupabaseAuthRepository` + `court_services.dart`.
+
+## Patterns
+
+- HTTP base: `API_BASE_URL` dart-define (see `baller_app/README.md`).
+- Tokens: `flutter_secure_storage` — never `SharedPreferences`.
+- New feature: add `backend/app/routers/*` endpoint + repository method together.
+
+## Do not
+
+- Bypass `AuthGate` in `main.dart`.
+- Add `Supabase.instance.client` table access for new API-mode features.

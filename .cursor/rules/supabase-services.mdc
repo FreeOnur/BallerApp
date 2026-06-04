@@ -1,0 +1,39 @@
+---
+description: "LEGACY: Supabase client patterns — use backend-api.mdc for new work"
+globs: baller_app/lib/supabase/**,baller_app/supabase/**
+alwaysApply: false
+---
+
+> **Deprecated for new features.** Use self-hosted API (`backend/`, `lib/repositories/`). Keep only while `USE_LEGACY_SUPABASE=true`.
+
+## Client services (`baller_app/lib/supabase/`)
+
+- Pattern: class with `final SupabaseClient _supabase = Supabase.instance.client;`
+- Example `court_services.dart` → `CourtServices.createCourt` inserts into `courts` with keys: `source`, `name`, `lat`, `lng`, `indoor`, `lights`, `has_markings`, `surface`, `hoops`, `address`
+- Use `.insert({...}).select('id').single()` and `return res['id'] as String;`
+- Prefer `_supabase.from(...)` consistently inside methods
+- Wrap failures: `try/catch` → `throw Exception('Failed to <action>: $e')` (match `auth_service.dart`)
+
+## Edge functions (`baller_app/supabase/functions/`)
+
+- Config: `baller_app/supabase/config.toml` — `[edge_runtime]`, `[functions.get-upload-url]` (`verify_jwt = true`)
+- Template: `get-upload-url/index.ts` + `deno.json`
+
+```typescript
+Deno.serve(async (req) => {
+  try {
+    const { filename } = await req.json();
+    // B2 signed URL via Deno.env.get("B2_KEY_ID") etc.
+    return new Response(JSON.stringify({ uploadURL, filePath: key }), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (e) {
+    return new Response(JSON.stringify({ error: (e as Error).message }), {
+      status: 500, headers: { "Content-Type": "application/json" },
+    });
+  }
+});
+```
+
+- Local: `supabase functions serve get-upload-url --no-verify-jwt`
+- VS Code Deno: `baller_app/.vscode/settings.json` → `deno.enablePaths: ["supabase/functions"]`

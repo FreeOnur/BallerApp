@@ -1,0 +1,33 @@
+---
+description: Self-hosted BallerApp API (FastAPI) — preferred over Supabase client for new work
+globs: backend/**,baller_app/lib/core/api/**,baller_app/lib/repositories/**
+alwaysApply: false
+---
+
+## Architecture
+
+- Flutter talks only to `API_BASE_URL` (HTTPS in prod) — never to Postgres directly.
+- Backend: `backend/app/` FastAPI routers `auth`, `courts`, `profiles`, `uploads`.
+- Local dev: `docker compose -f backend/docker-compose.dev.yml up -d`.
+
+## Flutter integration
+
+- `AppConfig.useLegacySupabase` from `--dart-define=USE_LEGACY_SUPABASE` (default `true`).
+- When `false`: use `lib/repositories/*` + `ApiClient` with Bearer token from `TokenStorage`.
+- New features: add API route + repository method; do not add `Supabase.instance.client` calls.
+
+## Auth endpoints
+
+- `POST /auth/register`, `/auth/login`, `/auth/refresh`, `/auth/logout`
+- Passwords: Argon2id server-side only.
+
+## Courts / profiles / uploads
+
+- `GET /courts` — approved courts
+- `POST /courts` — authenticated create
+- `GET /profiles/me`, `PUT /profiles/me`
+- `POST /uploads/presign` — B2 presigned upload (JWT)
+
+## Deprecated
+
+- Direct Supabase table access for new code — see `supabase-services.mdc` (legacy only).

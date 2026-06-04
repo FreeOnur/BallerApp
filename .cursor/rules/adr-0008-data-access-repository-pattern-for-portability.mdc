@@ -1,0 +1,72 @@
+---
+description: ADR-0008: Data access — Repository pattern for portability
+globs: lib/**/*.dart
+alwaysApply: true
+---
+
+
+# ADR-0008: Data access — Repository pattern for portability
+
+> **THE migration-enabler ADR.** Must be in place BEFORE feature #2 ships.
+
+## Context
+
+We accept (adr-0011-fastapi-postgres-b2-backend) that we migrate off managed Supabase to our **FastAPI + Postgres** API (see baller-app-hosting-runbook). If feature code calls `supabase.from('games').select(...)` directly inside widgets/notifiers, that migration is a multi-week rewrite touching every feature.
+
+The cost of building this abstraction now: a few extra files per feature. The cost of NOT building it: weeks of refactor under pressure.
+
+## Decision
+
+**Every data access in the app flows: Widget → Provider/Notifier → Repository (abstract interface) → Concrete Implementation (Supabase today / PocketBase or self-hosted Supabase tomorrow).**
+
+```dart
+// lib/features/games/domain/game_repository.dart
+abstract interface class GameRepository {
+  Future<List<Game>> findGamesNear({
+    required double lat,
+    required double lng,
+    required double radiusKm,
+    required GameFilters filters,
+  });
+  Future<void> joinGame(String gameId, {String? lockCode});
+  Future<void> leaveGame(String gameId);
+  Stream<Game> watchGame(String gameId);
+}
+
+// lib/features/games/data/supabase_game_repository.dart
+class SupabaseGameRepository implements GameRepository { ... }
+
+// lib/features/games/data/game_repository_provider.dart
+@riverpod
+GameRepository gameRepository(GameRepositoryRef ref) =>
+    SupabaseGameRepository(ref.read(supabaseClientProvider));
+```
+
+A widget that calls `supabase.client.from(...)` is a **review-blocker**. CI lint check (custom analyzer rule) added to enforce.
+
+## Alternatives considered
+
+1. **Direct SDK calls everywhere** — fastest now, catastrophic at migration time. Rejected.
+2. **GraphQL gateway in front of Supabase** — over-engineered for our scale; ops burden of running a gateway.
+3. **Service classes (procedural)** — looks like a repository but lacks the interface contract that makes swapping implementations cheap.
+
+## Consequences
+
+**Positive:** swap Supabase → self-hosted Supabase = change the concrete repository (same SDK) → done. Swap Supabase → PocketBase = write `PocketbaseGameRepository implements GameRepository`, change the provider, ship. Days, not weeks.
+
+**Negative:** extra files per feature; junior-Onur-in-3-weeks will be tempted to skip the abstraction "just this once."
+
+**Neutral:** repositories must return domain models (`freezed`-backed), never raw `Map<String,dynamic>` from the SDK. Mapping layer is part of the repository's job.
+
+## Cursor enforcement
+
+This note compiles to a Cursor rule (`cursor_rule: true`, `cursor_apply: always`, glob `lib/**/*.dart`). Cursor will refuse / warn on direct SDK calls in widget files.
+
+## Related
+
+- adr-0001-tech-stack-flutter-and-supabase · adr-0002-backend-self-host-strategy · stack-supabase · stack-pocketbase · clean-code-checklist · code-review-checklist
+
+
+<!-- source: vault/01_Projects\Baller-App\30_Decisions\adr-0008-data-access-repository-pattern-for-portability.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

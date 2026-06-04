@@ -1,0 +1,53 @@
+---
+description: stack-flutter — Flutter 3.x
+globs: lib/**/*.dart
+alwaysApply: true
+---
+
+
+# stack-flutter — Flutter 3.x
+
+## What it is
+
+Google's cross-platform UI framework. Compiles Dart to native iOS / Android (and web/desktop, which we don't target).
+
+## When I choose it
+
+- Cross-platform mobile-first app, solo dev, real-time + native APIs needed.
+- Want one codebase, near-native perf.
+
+## When I avoid it
+
+- Pure web product.
+- Apps that need bleeding-edge native SDK access on day-1 (Flutter lags ~6 months on new iOS/Android APIs).
+
+## Conventions I follow
+
+- Stateless widgets by default. Stateful only when local mutable state is essential.
+- Side-effects in Notifier.build (Riverpod) or behind a controller — never in build().
+- const constructors everywhere the analyzer suggests.
+- No print() in production. Use dart:developer log.
+- Strict mode, sound null safety, all flutter_lints + custom rules in analysis_options.yaml.
+- Theming: custom ThemeData + ThemeExtension. NO default Material 3.
+
+## Common gotchas
+
+- Hot reload misses ThemeData / static const changes — restart.
+- ListView.builder is the only correct way for long lists.
+- Image caching: use cached_network_image, not Image.network.
+
+## Snippets
+
+- pattern-riverpod-async-notifier
+- pattern-go-router-typed-routes
+- pattern-freezed-data-model
+
+## Resources
+
+- docs.flutter.dev · dart.dev · flutter_lints · very_good_analysis
+
+
+
+<!-- source: vault/03_Resources\Tech-Stacks\stack-flutter.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

@@ -1,51 +1,42 @@
-import 'dart:ffi';
-
+import 'package:baller_app/core/config/app_config.dart';
+import 'package:baller_app/repositories/api_auth_repository.dart';
+import 'package:baller_app/repositories/auth_repository.dart';
+import 'package:baller_app/repositories/auth_result.dart';
+import 'package:baller_app/repositories/profile_repository.dart';
+import 'package:baller_app/repositories/repository_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
-  final SupabaseClient _supabase = Supabase.instance.client;
+  AuthService({
+    AuthRepository? authRepository,
+    ProfileRepository? profileRepository,
+  })  : _auth = authRepository ?? RepositoryProvider.auth,
+        _profiles = profileRepository ?? RepositoryProvider.profiles;
 
-  // Sign in with email and password
-  Future<AuthResponse> signInWithEmailPassword(
-    String email,
-    String password,
-  ) async {
-    return await _supabase.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
+  final AuthRepository _auth;
+  final ProfileRepository _profiles;
+
+  Future<AuthResult> signInWithEmailPassword(String email, String password) {
+    return _auth.signInWithEmailPassword(email, password);
   }
 
-  // Sign up with email password
-  Future<AuthResponse> signUp(String email, String password) async {
-    final response = await _supabase.auth.signUp(
-      email: email,
-      password: password,
-    );
+  Future<AuthResult> signUp(String email, String password) {
+    return _auth.signUp(email, password);
+  }
 
-    // Wenn Signup erfolgreich, Profil anlegen
-    final user = response.user;
-    if (user != null) {
-      await _supabase.from('profiles').insert({
-        'id': user.id,
-        'username': '', 
-        'avatar_url': null,
-        'age': null,
-        'location': null,
-        'gender': null,
-        'skill_level': null,
-      });
+  Future<void> signOut() => _auth.signOut();
+
+  Future<bool> hasSession() => _auth.hasSession();
+
+  Future<String?> resolveUserId() async {
+    final syncId = _auth.getCurrentUserId();
+    if (syncId != null) return syncId;
+    if (_auth is ApiAuthRepository) {
+      return _auth.getUserIdAsync();
     }
-
-    return response;
+    return null;
   }
 
-  // Sign Out
-  Future<void> signOut() async {
-    await _supabase.auth.signOut();
-  }
-
-  // Create Profile
   Future<void> createProfile({
     required String username,
     String? avatarURL,
@@ -54,28 +45,34 @@ class AuthService {
     required int? gender,
     required int? skillLevel,
   }) async {
-    final user = _supabase.auth.currentUser;
-    if (user == null) {
+    final userId = await resolveUserId();
+    if (userId == null) {
       throw Exception('No user logged in!');
     }
     try {
-      await _supabase.from('profiles').upsert({
-      'id': user.id,
-      'username': username,
-      'age': age,
-      'location': location,
-      'gender': gender,
-      'skill_level': skillLevel,
-      });
+      await _profiles.upsertProfile(
+        userId: userId,
+        username: username,
+        age: age,
+        location: location,
+        gender: gender,
+        skillLevel: skillLevel,
+        avatarUrl: avatarURL,
+      );
     } catch (e) {
       throw Exception('Failed to create profile: $e');
     }
   }
 
-  // Get User Email
-  String? getCurrentUserEmail() {
-    final session = _supabase.auth.currentSession;
-    final user = session?.user;
-    return user?.email;
+  String? getCurrentUserEmail() => _auth.getCurrentUserEmail();
+
+  String? getCurrentUserId() => _auth.getCurrentUserId();
+
+  /// Password reset — Supabase only until API forgot-password is wired.
+  Future<void> resetPasswordForEmail(String email) async {
+    if (!AppConfig.useLegacySupabase) {
+      throw UnsupportedError('Use API forgot-password when USE_LEGACY_SUPABASE=false');
+    }
+    await Supabase.instance.client.auth.resetPasswordForEmail(email);
   }
 }

@@ -1,0 +1,49 @@
+---
+description: stack-supabase — managed Supabase
+globs: lib/**/data/**/*.dart
+alwaysApply: true
+---
+
+
+# stack-supabase — managed Supabase
+
+## What it is
+
+Open-source Firebase alternative on Postgres. Auth, RLS, Realtime, Storage, Edge Functions, Storage.
+
+## When I choose it
+
+v0/v1 of solo-dev mobile-first products. See adr-0001-tech-stack-flutter-and-supabase.
+
+## When I avoid it
+
+Apps that need >1000 DAU on a tight budget (cost jumps). Then migrate per adr-0002-backend-self-host-strategy.
+
+## Conventions I follow
+
+- RLS enabled on every table. No exceptions.
+- Service-role key NEVER in client — anon key only.
+- All access through a Repository — see adr-0008-data-access-repository-pattern-for-portability.
+- Secrets via --dart-define or flutter_dotenv.
+- Auth state via supabase.auth.onAuthStateChange.
+- Server-side validation in RPCs (SQL functions), never trust the client.
+
+## Common gotchas
+
+- Realtime channel subscriptions leak — dispose in Notifier.onDispose.
+- RLS: `auth.uid()` is null for anon, fail closed.
+- Storage URLs expire — sign on the server, not the client, for private buckets.
+
+## Snippets
+
+- pattern-supabase-repository
+
+## Resources
+
+- supabase.com/docs
+
+
+
+<!-- source: vault/03_Resources\Tech-Stacks\stack-supabase.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

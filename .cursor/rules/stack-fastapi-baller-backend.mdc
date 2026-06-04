@@ -1,0 +1,48 @@
+---
+description: BallerApp self-hosted API — FastAPI, Postgres, JWT, B2.
+globs: backend/**
+alwaysApply: true
+---
+
+
+# Stack: FastAPI Baller backend
+
+## Layout (repo)
+
+- `backend/app/main.py` — app factory, CORS, routers
+- `backend/app/routers/` — `auth`, `courts`, `profiles`, `uploads`
+- `backend/app/security/` — JWT, Argon2
+- `backend/migrations/` — SQL schema
+- `backend/docker-compose.dev.yml` / `docker-compose.prod.yml`
+
+## Local
+
+```powershell
+cd backend
+copy .env.example .env
+docker compose -f docker-compose.dev.yml up -d --build
+```
+
+Docs: `http://localhost:8000/docs`
+
+## Env (production)
+
+- `DATABASE_URL`, `JWT_SECRET`, `ENVIRONMENT`, `CORS_ORIGINS`
+- `B2_KEY_ID`, `B2_APP_KEY`, `B2_BUCKET`, `B2_ENDPOINT`, `B2_REGION`
+
+## Flutter
+
+```text
+--dart-define=API_BASE_URL=https://api.example.com
+--dart-define=USE_LEGACY_SUPABASE=false
+```
+
+## Not in this stack
+
+- Supabase Auth / RLS / Realtime (legacy until cutover)
+- MinIO on VPS (use B2)
+
+
+<!-- source: vault/03_Resources\Tech-Stacks\stack-fastapi-baller-backend.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

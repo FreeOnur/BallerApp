@@ -14,7 +14,8 @@ When completing a task, fill this template (append to this file or keep in mind)
 - [ ] **Auth** — User id from session only; no client-supplied user ids for ownership
 - [ ] **Input validation** — All user inputs validated/sanitized before use or send
 - [ ] **Secrets** — No keys/tokens in source; env or secure config only
-- [ ] **RLS** — Supabase queries assume RLS; filter by auth.uid() where needed
+- [ ] **RLS / API auth** — Legacy: Supabase RLS + auth.uid(); Self-hosted: API enforces user id from JWT only
+- [ ] **Backend** — Postgres not public; JWT secret strong; Argon2 passwords; Caddy TLS in prod
 - [ ] **Async safety** — Errors handled; no uncaught Futures; no sensitive data in error messages
 - [ ] **Logging** — No tokens, PII, or full request/response in logs
 - [ ] **HTTPS** — No plain HTTP for API or auth

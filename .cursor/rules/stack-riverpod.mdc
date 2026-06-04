@@ -1,0 +1,49 @@
+---
+description: stack-riverpod — Riverpod 2.x
+globs: lib/**/*.dart
+alwaysApply: true
+---
+
+
+# stack-riverpod — Riverpod 2.x
+
+## What it is
+
+Compile-safe state management for Flutter. Successor to Provider.
+
+## When I choose it
+
+Any Flutter app past a single screen.
+
+## When I avoid it
+
+A 3-screen demo where Provider suffices.
+
+## Conventions I follow
+
+- @riverpod codegen annotation everywhere.
+- AsyncNotifier for any async data source.
+- autoDispose by default; opt out with .keepAlive() explicitly.
+- ref.watch / ref.read appropriate to context (watch in build, read in callbacks).
+- select() for rebuild granularity.
+- Provider-based DI for repositories — never service locators.
+
+## Common gotchas
+
+- ref.read in build() = race conditions and stale data. Use watch.
+- StateProvider is anti-pattern for anything complex — promote to Notifier.
+- Family providers + autoDispose interaction is tricky — read the docs twice.
+
+## Snippets
+
+- pattern-riverpod-async-notifier
+
+## Resources
+
+- riverpod.dev
+
+
+
+<!-- source: vault/03_Resources\Tech-Stacks\stack-riverpod.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

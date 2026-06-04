@@ -1,0 +1,41 @@
+---
+description: stack-go-router — go_router 14+
+globs: lib/**/router/**/*.dart,lib/app/**/*.dart
+alwaysApply: false
+---
+
+
+# stack-go-router — go_router 14+
+
+## What it is
+
+Declarative routing for Flutter, deep-link friendly.
+
+## When I choose it
+
+Always, for multi-screen apps.
+
+## When I avoid it
+
+Tiny apps (use Navigator 2 directly only when go_router can't express the flow — rare).
+
+## Conventions I follow
+
+- Typed routes via codegen.
+- Single GoRouter in lib/app/router/app_router.dart.
+- Auth redirect logic in router redirect callback, NOT in screen build methods.
+
+## Common gotchas
+
+- ShellRoute + statefulShellRoute confusion — pick one based on whether tabs preserve state.
+- Hot reload sometimes loses location — restart.
+
+## Resources
+
+- pub.dev/packages/go_router
+
+
+
+<!-- source: vault/03_Resources\Tech-Stacks\stack-go-router.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

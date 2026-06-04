@@ -1,0 +1,53 @@
+---
+description: Code Review Checklist
+globs: lib/**/*.dart,test/**/*.dart
+alwaysApply: false
+---
+
+
+# Code Review Checklist
+
+## Before approving, verify
+
+### Correctness
+- [ ] No `dynamic` / `// ignore` without a comment.
+- [ ] Names self-explanatory.
+- [ ] Functions do one thing, ≤3 args.
+- [ ] Errors handled (not swallowed) and surfaced in brand voice.
+- [ ] No `print()` / leftover `debugPrint`.
+
+### Architecture
+- [ ] Repository pattern respected: no Supabase SDK calls in widgets/notifiers (adr-0008-data-access-repository-pattern-for-portability).
+- [ ] Feature-first folder structure (adr-0010-folder-structure-feature-first-vs-layer-first).
+- [ ] No new circular dependencies between features.
+
+### Tests
+- [ ] Tests pass.
+- [ ] New behavior covered by at least one test.
+- [ ] No tests of trivial getters.
+
+### Security
+- [ ] No secrets committed. `.env` in `.gitignore`.
+- [ ] RLS on any new table. Server-side validation in RPCs.
+- [ ] No service-role key in client code.
+
+### Performance
+- [ ] No new O(n²) loops on user-facing paths.
+- [ ] Long lists use `ListView.builder` / `SliverList.builder`.
+- [ ] Images via `cached_network_image`.
+- [ ] `const` constructors where the analyzer suggests.
+
+### Accessibility
+- [ ] `Semantics` on new interactive elements.
+- [ ] Tap targets ≥44pt.
+- [ ] Contrast verified (4.5:1 body).
+
+### Hygiene
+- [ ] Conventional commit message proposed.
+- [ ] Dead code deleted.
+- [ ] No new TODO without owner + date.
+
+
+<!-- source: vault/02_Areas\Coding-Practices\code-review-checklist.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

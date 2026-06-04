@@ -1,0 +1,51 @@
+---
+description: Self-hosted FastAPI + Postgres/PostGIS + Backblaze B2; replaces managed Supabase for DB/auth on cutover.
+globs: backend/**,baller_app/lib/repositories/**,baller_app/lib/core/api/**
+alwaysApply: true
+---
+
+
+# ADR-0011: FastAPI + Postgres + B2 (self-hosted backend)
+
+## Context
+
+adr-0002-backend-self-host-strategy planned **self-hosted Supabase via Docker**. The repo now ships a **slimmer stack**: own API, own auth, external object storage — better fit for CPX22 RAM and solo ops (optional **Coolify** for deploy UI).
+
+## Decision
+
+**Production target (Layer B backend):**
+
+| Concern | Choice |
+|---------|--------|
+| API | FastAPI + Uvicorn (`backend/app/`) |
+| Database | PostgreSQL + PostGIS |
+| Auth | Argon2id + JWT/refresh (not Supabase Auth on cutover) |
+| Images | Backblaze B2 presigned uploads (`/uploads/presign`) |
+| Deploy | Docker Compose on Hetzner; **Coolify** optional (proxy replaces Caddy in compose) |
+
+**Flutter:** Repository pattern (adr-0008-data-access-repository-pattern-for-portability) with `ApiClient` when `USE_LEGACY_SUPABASE=false`. Default remains legacy Supabase until cutover.
+
+**Password migration:** Supabase password hashes are **not portable** — users reset passwords per cutover runbook (repo: `docs/DEPLOY.md` (auth cutover section)).
+
+## Consequences
+
+**Positive:** Lower RAM than full Supabase stack; clear ownership of auth and schema; B2 avoids VPS disk for photos.
+
+**Negative:** No Supabase Realtime/RLS out of the box — chat/realtime needs a later ADR; more custom backend work.
+
+**Neutral:** adr-0007-auth-strategy-supabase-otp-plus-apple-google may need revision when Apple/Google login moves to FastAPI.
+
+## Repo runbooks (how, not duplicated here)
+
+- Hosting checklist: `docs/DEPLOY.md`
+- Local API: `BallerApp/backend/README.md`
+- Ops index in vault: baller-app-hosting-runbook
+
+## Supersedes
+
+adr-0002-backend-self-host-strategy — status set to superseded; PocketBase/self-hosted Supabase are no longer the primary path.
+
+
+<!-- source: vault/01_Projects\Baller-App\30_Decisions\adr-0011-fastapi-postgres-b2-backend.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

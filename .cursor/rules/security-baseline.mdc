@@ -1,0 +1,53 @@
+---
+description: Security Baseline
+globs: lib/**/*.dart,supabase/**/*.sql
+alwaysApply: true
+---
+
+
+# Security Baseline
+
+## RLS
+
+- Every table has RLS enabled. No exceptions.
+- Policies are explicit. Fail closed.
+- `auth.uid()` is null for anon → policies handle this case.
+
+## Secrets
+
+- NEVER commit. `.env` in `.gitignore`.
+- App config via `--dart-define` or `flutter_dotenv` (loaded at startup, never in source).
+- Supabase anon key only in client. Service role key is server-only (Edge Functions, admin tooling).
+
+## Input validation
+
+- Server-side validation in Postgres functions and CHECK constraints.
+- Client validation is UX, not security.
+- Sanitize before storage even when type-safe (e.g., trim, length cap on free text).
+
+## PII
+
+- No PII in logs (names, emails, locations).
+- Log user IDs (UUID) instead.
+- Crash reporting: scrub PII before send.
+
+## Auth
+
+- Auth state via `supabase.auth.onAuthStateChange`, NOT a bool in shared prefs.
+- Sensitive ops (delete account, change email) require recent reauth.
+- Apple Sign-In: respect "Hide my email" relay.
+
+## Dependencies
+
+- `flutter pub outdated` weekly.
+- Pin major versions in `pubspec.yaml`.
+- Audit transitive deps after any new package.
+
+## Reporting
+
+- If a vulnerability is reported, log it as a bug-NNNN with severity P0 and follow the incident-response runbook (engineering-incident-response when written).
+
+
+<!-- source: vault/02_Areas\Coding-Practices\security-baseline.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->

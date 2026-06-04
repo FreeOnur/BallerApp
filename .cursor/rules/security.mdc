@@ -1,0 +1,36 @@
+---
+description: Security rules for API keys, auth, backend, and permissions
+globs: baller_app/lib/**,baller_app/ios/Runner/AppDelegate.swift,baller_app/android/app/src/main/AndroidManifest.xml,backend/**
+alwaysApply: false
+---
+
+## Secrets
+
+- **Never** commit Supabase URL/anon key, Google Maps keys, B2 keys, JWT secrets, or DB passwords
+- Flutter: use `--dart-define=API_BASE_URL`, `SUPABASE_URL`, `SUPABASE_ANON_KEY` — remove hardcoded values from `main.dart`
+- Google Maps: `baller_app/android/.../AndroidManifest.xml` · `baller_app/ios/Runner/AppDelegate.swift` — inject at build time
+- Backend: `backend/.env` from `.env.example` only; `JWT_SECRET` min 32 random bytes in production
+- B2: only server-side in API env (`B2_KEY_ID`, `B2_APP_KEY`)
+- `.cursor/mcp.json` — rotate exposed tokens; use env-based auth locally
+
+## Auth (self-hosted API)
+
+- Tokens in `flutter_secure_storage` via `TokenStorage` — never `SharedPreferences`
+- Access JWT short-lived; refresh via `POST /auth/refresh`
+- Legacy Supabase mode: migrate off before production; plan password reset for existing users
+
+## Auth (legacy Supabase)
+
+- `auth_gate.dart` — `onAuthStateChange` + `profiles` lookup when `USE_LEGACY_SUPABASE=true`
+- Deprecate after cutover — see `auth-flow` skill
+
+## Backend / Docker
+
+- Postgres not exposed on public internet in production
+- TLS via Caddy (`backend/Caddyfile`)
+- Rate-limit login endpoints in production (proxy or app layer)
+
+## Permissions
+
+- iOS `Info.plist`: location + photo library usage strings
+- Android `AndroidManifest.xml`: location permissions as required by features

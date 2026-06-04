@@ -4,7 +4,10 @@ import 'package:baller_app/pages/AuthenthicationPage/ResetPassword/password_forg
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({super.key, this.onAuthSuccess});
+
+  /// Called after successful login when not using Supabase auth stream (API mode).
+  final VoidCallback? onAuthSuccess;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -24,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       await authService.signInWithEmailPassword(email, password);
+      widget.onAuthSuccess?.call();
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(

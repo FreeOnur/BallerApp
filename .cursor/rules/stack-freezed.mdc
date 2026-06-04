@@ -1,0 +1,37 @@
+---
+description: stack-freezed — freezed + json_serializable
+globs: lib/**/*.dart
+alwaysApply: false
+---
+
+
+# stack-freezed — freezed + json_serializable
+
+## What it is
+
+Codegen for immutable data classes + sealed unions + JSON serialization.
+
+## When I choose it
+
+Every domain model and DTO.
+
+## Conventions I follow
+
+- @freezed sealed classes for state unions (Loading | Data | Error).
+- Always implements toJson/fromJson via @JsonSerializable inside the @freezed class.
+- Run build_runner watch in dev terminal.
+
+## Common gotchas
+
+- build_runner gets stuck — `flutter pub run build_runner clean && build_runner build --delete-conflicting-outputs`.
+- Don't put logic in freezed classes (use extension methods or plain functions).
+
+## Resources
+
+- pub.dev/packages/freezed
+
+
+
+<!-- source: vault/03_Resources\Tech-Stacks\stack-freezed.md
+     generated: 2026-06-02T10:11:49Z
+     do not edit â€” edit the vault note and run: pwsh scripts/brain-export.ps1 -->
