@@ -119,3 +119,6 @@ app.*.symbols
 !/dev/ci/**/Gemfile.lock
 # Caliber local state
 .caliber/
+
+# Local court import dump (133MB+ — use import-local.ps1, do not commit)
+backend/scripts/courts.sql

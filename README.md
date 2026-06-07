@@ -28,4 +28,4 @@ cd baller_app
 flutter run --dart-define=USE_LEGACY_SUPABASE=false --dart-define=API_BASE_URL=https://api.ballup.net
 ```
 
-Data migration: `backend/scripts/export-from-supabase.md`
+Data migration: `backend/scripts/export-from-supabase.md` · local `backend/scripts/courts.sql` (gitignored, 133MB+) via `backend/scripts/import-local.ps1`
