@@ -1,0 +1,50 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+# BallerApp Reference Rebuild (Manual)
+
+Nur laden wenn der Nutzer **explizit Design-Bilder, Mockups oder Screenshots** zum Nachbauen liefert (`@55-baller-reference-rebuild-manual`).
+
+## Vorrang-Hierarchie
+
+1. **Referenz-Bild** — Layout, Proportionen, Typo-Hierarchie, sichtbare Farben, Komposition.
+2. **`@baller-design-knowledge.md`** — für Werte die in der Referenz fehlen (Spacing-Tokens, States, Motion, A11y).
+3. **Slop-Verbote** — nur wo sie der Referenz **nicht** widersprechen.
+
+## Was die Referenz überschreiben darf
+
+- Makrostruktur (auch Centered-Hero oder 3-Karten-Layout, wenn so in der Referenz).
+- Farben und Fonts, die in der Referenz sichtbar sind (auch wenn sie von Baller-Defaults abweichen).
+- Radius-, Schatten- und Spacing-Rhythmus der Referenz.
+- Light Mode, wenn Referenz hell ist.
+
+## Was NIEMALS ignoriert wird
+
+- **A11y:** Touch-Targets ≥ 44/48, Kontrast Body 4,5:1, Semantics, `textScaler`-Clamp.
+- **States:** Focus ohne Layout-Shift, Disabled = 3 Signale, Error mit Helper-Slot.
+- **Reduced Motion:** `disableAnimationsOf` absichern.
+- **Copy:** keine erfundenen Metriken in neu geschriebener Copy — auch wenn Referenz Marketing-Zahlen zeigt, nur übernehmen wenn Nutzer sie als real bestätigt.
+- **Funktionalität:** Referenz ist visuell, nicht architektonisch — Repository-Pattern, Security, Performance-Rules bleiben aktiv.
+
+## Pflicht bei Referenz-Nachbau
+
+1. Referenz kurz dekonstruieren (Layout-Typ, Fokuspunkt, Farben, Typo-Hierarchie).
+2. Abweichungen von Baller-Tokens dokumentieren (Kommentar oder PR-Notiz).
+3. Nach Fertigstellung: `@50-baller-design-audit-manual` im Modus `reference-rebuild`.
+
+```dart
+// good — Referenz-Layout nachbauen, Baller-States trotzdem
+// Referenz zeigt zentrierten Hero → Column(center) ist OK hier
+// ABER: Button braucht WidgetStateProperty-Overlays + Semantics
+Semantics(
+  label: 'Spiel starten',
+  button: true,
+  child: FilledButton(/* Referenz-Farbe aus Bild */, onPressed: onStart, child: Text('RUN')),
+)
+
+// bad — Referenz als Ausrede für fehlende States
+ElevatedButton(onPressed: onStart, child: Text('RUN')) // kein Focus-Ring, kein Disabled-Verhalten
+```

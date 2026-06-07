@@ -1,0 +1,34 @@
+---
+description:
+globs: baller_app/**/*.dart
+alwaysApply: false
+---
+
+# BallerApp Motion
+
+Nur Animationen. Alle Dauer-, Easing- und Reduced-Motion-Werte: `@baller-design-knowledge.md` (§7 Motion).
+
+## Regeln (Pflicht)
+
+- **Dauern:** Micro 120–200 ms · Standard 200–300 ms · Groß 300–500 ms.
+- **Easing:** Enter → `Curves.easeOut`; Exit → `Curves.easeIn`; Move → `Curves.easeInOut`; Hero-Reveal → `Cubic(0.16, 1, 0.3, 1)`.
+- **Nur** `transform` und `opacity` animieren — nie `width`/`height`/Padding/Margin.
+- **Ein** orchestrierter Screen-Load (Stagger 30–80 ms) — kein generisches Scroll-Fade auf allem.
+- **Reduced Motion:** jede Animation mit `MediaQuery.disableAnimationsOf(context)` absichern; Fallback Fade oder harter Cut.
+- Kein `linear` für UI (nur Spinner/Progress). Kein Bounce/Elastic. Kein Wiggle/Floating-Badge ohne Funktion.
+
+```dart
+// good — Reduced Motion + korrekte Dauer/Easing
+final reduceMotion = MediaQuery.disableAnimationsOf(context);
+child.animate(target: reduceMotion ? 0 : 1)
+  .fadeIn(duration: 200.ms, curve: Curves.easeOut)
+  .slideY(begin: 0.08, curve: const Cubic(0.16, 1, 0.3, 1));
+
+// bad — Layout-Property animieren
+AnimatedContainer(duration: const Duration(milliseconds: 300), width: expanded ? 200 : 100)
+
+// bad — Scroll-Fade auf jedem Listenelement ohne Bedeutung
+ListView.builder(
+  itemBuilder: (_, i) => item.animate().fadeIn(delay: (i * 100).ms),
+)
+```

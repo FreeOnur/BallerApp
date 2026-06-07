@@ -1,0 +1,62 @@
+---
+description:
+globs: baller_app/lib/pages/**, baller_app/lib/screens/**, baller_app/lib/widgets/**
+alwaysApply: false
+---
+
+# BallerApp Layout & Komposition
+
+Alle Layout-, Spacing- und Kompositions-Werte: `@baller-design-knowledge.md` (§5 Spacing/Layout, §6 Tiefe, §1 Slop-Blacklist Layout).
+
+## Vor dem Layout (Pflicht)
+
+In 3–6 Zeilen festhalten: Zweck · Tonalität (editorial-meets-streetball) · **ein** merkbares Element · Makrostruktur (Bento / Stat-Led / Editorial / Marquee / Asymmetric Overlap).
+
+## Spacing (Pflicht)
+
+Nur Token-Skala: **4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96 · 128** (ggf. 192 · 256 für Marketing). Nie ad-hoc `EdgeInsets.all(16)` oder willkürliche Pixel.
+
+## Struktur-Verbote (Pflicht)
+
+- **Kein** Centered-Everything-Hero (Eyebrow + H1 + Absatz + ein Button).
+- **Kein** Drei-Icon-Karten-Raster (Icon + fetter Titel + 2 Zeilen grauer Text).
+- **Kein** perfekt symmetrisches 12-Spalten-Raster ohne Fokuspunkt.
+- **Kein** AI-Nav (Logo links + 4 zentrierte Links + Pille rechts) oder AI-Footer (4 identische Spalten).
+- **Kein** Glassmorphism, Backdrop-Blur-Deko oder verschwommene Blobs.
+
+## Struktur-Pflichten
+
+- **Links ausrichten** als Default; Asymmetrie und grid-brechendes Element einplanen.
+- **Ein** dominanter Fokuspunkt pro Screen (Stat-Led-Zahl, übergroßes Display-Lettering, bleed-off Foto).
+- Mobile Gutter **16–24 px**; Marketing-Sektionen vertikal **96–128 px** Padding.
+- Borders funktional: Dark `rgba(255,255,255,0.08)` — trennen, nicht dekorieren.
+- Atmosphärische Flächen: Noise 3–5 %, Court-Linien-Grid 1 px / 10–20 % Opacity — nie flaches `#000`.
+
+```dart
+// good — Stat-Led, asymmetrisch, Token-Spacing
+Padding(
+  padding: EdgeInsets.symmetric(horizontal: context.spacing.lg),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('24', style: context.type.scoreboardLarge), // riesige Zahl
+      SizedBox(height: context.spacing.sm),
+      Text('Courts in deiner Nähe', style: context.type.statLabel),
+      SizedBox(height: context.spacing.xl),
+      _bentoGrid(), // ungleiche Kacheln, kein 3er-Raster
+    ],
+  ),
+)
+
+// bad — Centered-Everything-Hero
+Column(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Text('Welcome'), Text('Find courts near you'),
+    ElevatedButton(onPressed: () {}, child: Text('Get Started')),
+  ],
+)
+
+// bad — Drei identische Feature-Karten
+Row(children: [_featureCard(), _featureCard(), _featureCard()])
+```

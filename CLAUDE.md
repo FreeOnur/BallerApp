@@ -22,10 +22,10 @@ Flutter (`baller_app/pubspec.yaml`, SDK `^3.9.0`) · **legacy** `supabase_flutte
 | **Models** | `baller_app/lib/models/Court.dart` — `factory Court.fromMap` (baseline: `id`, `name`, `lat`, `lng`, `indoor`; extend for `lights`, `has_markings`, `surface`, `hoops`, `address`) |
 | **Services** | `baller_app/lib/services/load_position.dart` (`LocationService`) · `badword_filter.dart` |
 | **Legacy Supabase** | `baller_app/lib/supabase/court_services.dart` — only when `USE_LEGACY_SUPABASE=true` |
-| **Theme** | `baller_app/lib/theme/app_colors.dart` · `app_spacing.dart` · `app_sizes` |
+| **Theme** | `baller_app/baller-design-knowledge.md` · `baller_app/lib/theme/app_colors.dart` · `app_spacing.dart` · `app_sizes` |
 | **Edge** | `baller_app/supabase/functions/get-upload-url/index.ts` · `config.toml` → `[functions.get-upload-url]` |
 | **Deploy** | `docker-compose.yml` (repo root, Coolify) · see root `README.md` |
-| **Import** | `backend/scripts/export-from-supabase.md` |
+| **Import** | `backend/scripts/export-from-supabase.md` · local `backend/scripts/courts.sql` (gitignored) via `import-local.ps1` |
 
 ## Commands
 
@@ -77,6 +77,7 @@ caliber refresh --dry-run
 - **Models**: `Court.fromMap`; snake_case DB keys — align with `001_initial.sql` and repositories
 - **Location**: `LocationService.loadPosition()` only — no raw `Geolocator` in widgets
 - **Secrets**: `--dart-define` / `backend/.env` — never commit keys
+- **CI**: `.github/workflows/pr-quality.yaml` — `peakoss/anti-slop@v0` on PR open/reopen
 - **Skills**: `repository-layer` · `fastapi-router` · `auth-flow` · `postgres-migrations` · `setup-caliber`
 - **Learnings**: `CALIBER_LEARNINGS.md` when present
 

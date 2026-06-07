@@ -1,0 +1,39 @@
+---
+description:
+globs: baller_app/lib/widgets/**, baller_app/lib/pages/**
+alwaysApply: false
+---
+
+# BallerApp Accessibility
+
+Alle Kontrast-, Touch- und Semantics-Werte: `@baller-design-knowledge.md` (§9 Accessibility).
+
+## Regeln (Pflicht)
+
+- **Touch-Targets:** iOS ≥ 44 pt, Android ≥ 48 dp; Custom-Widgets in `SizedBox(width: 48, height: 48)` wrappen wenn nötig.
+- **Kontrast:** Body-Text 4,5:1 · Large/UI 3:1; Bedeutung nie nur über Farbe (Icon/Text/Muster ergänzen).
+- **Semantics:** Label knapp, **ohne** „Button" (Rolle wird angehängt); Icon-only-Buttons brauchen `tooltip`.
+- **Deko-Bilder:** `ExcludeSemantics` oder `semanticLabel: ''`.
+- **Text-Scaling:** `MediaQuery.textScalerOf(context)` clampen auf 1.0–1.4.
+- **System-Präferenzen:** `boldTextOf`, `highContrastOf`, `disableAnimationsOf` respektieren.
+
+```dart
+// good — Touch-Target + Semantics + Tooltip
+Semantics(
+  label: 'Court beitreten',
+  button: true,
+  child: Tooltip(
+    message: 'Court beitreten',
+    child: SizedBox(
+      width: 48, height: 48,
+      child: IconButton(icon: const Icon(Icons.add), onPressed: onJoin),
+    ),
+  ),
+)
+
+// bad — Icon-only ohne Label, zu klein
+IconButton(icon: const Icon(Icons.add), onPressed: onJoin)
+
+// bad — Status nur über Farbe
+Container(color: Colors.green, child: Text('Online')) // kein Icon/Text-Kontext
+```

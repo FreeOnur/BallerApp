@@ -1,0 +1,46 @@
+---
+description:
+globs: baller_app/lib/theme/**, baller_app/**/*theme*.dart
+alwaysApply: false
+---
+
+# BallerApp Theme & Tokens
+
+Alle Werte aus `@baller-design-knowledge.md` (§4 Farbe, §3 Typo, §5 Spacing, §6 Schatten/Radius, §7 Motion, §8 Flutter-Theming). OKLCH entwerfen, als Hex ausliefern.
+
+## Architektur (Pflicht)
+
+- `ThemeExtension` für `BallerColors`, `BallerType`, `BallerSpacing`, `BallerMotion`, `BallerRadius`, `BallerElevation` — jedes mit korrektem `copyWith` + `lerp` auf allen Feldern.
+- Registrieren in `ThemeData(extensions: [...])`.
+- Zugriff nur via `BuildContext`-Extension: `context.colors.court`, `context.spacing.lg`, `context.type.displayHero`, `context.radius.sharp`, `context.elevation.raised`.
+- Custom-Tokens **niemals** in Materials `ColorScheme`/`TextTheme`-Slot-Namen pressen.
+- `useMaterial3: true` mit custom `ColorScheme`, `TextTheme`, Komponenten-Themes — kein `ColorScheme.fromSeed`, kein Default-Roboto.
+- Schatten: 5 Stufen, jeweils zweiteiliger Schatten (§6) — nie `BoxShadow(blurRadius: 4, color: Colors.black26)` überall.
+- Radius: Token `0–8 px` + `9999` nur für Pillen — nie reflexhaft `BorderRadius.circular(12)` auf jeder Box.
+
+```dart
+// good — Token-Zugriff, ThemeExtension
+Container(
+  color: context.colors.surface,
+  padding: EdgeInsets.all(context.spacing.md),
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(context.radius.md),
+    boxShadow: context.elevation.card,
+  ),
+  child: Text('GAME ON', style: context.type.displayHero),
+)
+
+// bad — Material-Default, ad-hoc Farbe
+Container(
+  color: Colors.deepPurple,
+  padding: const EdgeInsets.all(16),
+  child: Text('GAME ON', style: Theme.of(context).textTheme.headlineLarge),
+)
+
+// bad — Grey-Rampe und Schatten improvisieren
+decoration: BoxDecoration(
+  color: Colors.grey[800],
+  borderRadius: BorderRadius.circular(12),
+  boxShadow: [BoxShadow(blurRadius: 4, color: Colors.black26)],
+)
+```

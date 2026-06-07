@@ -1,0 +1,40 @@
+---
+description:
+globs: baller_app/lib/pages/**, baller_app/lib/screens/**, baller_app/lib/widgets/**
+alwaysApply: false
+---
+
+# BallerApp Copy & Inhalt
+
+Alle Copy-Regeln: `@baller-design-knowledge.md` (§1 Slop-Blacklist Copy, §10 Ehrliche Copy).
+
+## Harte Verbote (Pflicht)
+
+- **Keine** erfundenen Metriken („10.000+ Nutzer", „99,9 % Uptime", „4,8★ Rating").
+- **Keine** Floskeln: „Built for the modern team", „Supercharge your workflow", „Take it to the next level", „Get started in seconds".
+- **Kein** Lorem-Ipsum oder Platzhalter-Text in Prod-UI.
+- **Kein** apologetischer Empty-State („Oops, nothing here!", „No data found").
+- **Kein** redundantes Heading + Sublabel + Helper, das dasselbe sagt.
+- **Kein** Emoji als Feature-Icon oder in primärer UI-Copy.
+
+## Pflicht-Copy-Muster
+
+- **Empty-States:** handlungsleitende Einladung mit konkretem nächsten Schritt.
+- **Fehler:** konkrete Ursache + nächster Schritt (nicht „Something went wrong").
+- **CTAs:** spezifisch zur Aktion („Court hinzufügen", „Spiel beitreten") — nie generisch „Learn more" ohne Kontext.
+- **Metriken:** nur echte, belegbare Zahlen — sonst weglassen.
+- **Voice:** editorial-meets-streetball, direkt, athletic — nie SaaS-Marketing-Sprech.
+
+```dart
+// good — ehrlich, handlungsleitend
+Text('Noch keine Courts in deiner Nähe.')
+Text('Füg den ersten Court hinzu — dauert unter einer Minute.')
+FilledButton(onPressed: onAddCourt, child: Text('Court hinzufügen'))
+
+// bad — erfundene Metrik + Floskel
+Text('10.000+ zufriedene Spieler vertrauen BallerApp')
+Text('Supercharge your pickup game')
+
+// bad — apologetischer Empty-State
+Text('Oops! Hier ist noch nichts 🏀')
+```

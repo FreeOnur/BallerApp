@@ -1,0 +1,45 @@
+---
+description:
+globs: baller_app/lib/widgets/**, baller_app/lib/pages/**, baller_app/lib/screens/**
+alwaysApply: false
+---
+
+# BallerApp Widgets & States
+
+Alle State-, Overlay- und Loading-Regeln: `@baller-design-knowledge.md` (§10 Komponenten & States, §8 Flutter-Theming).
+
+## Interaktive Widgets (Pflicht)
+
+Jeder interaktive Widget implementiert **alle** States: default · hover · focus · pressed · disabled · loading · error · success.
+
+- **Focus:** sichtbarer Ring via `outline`/Overlay — **kein** Border-Width-Wechsel (Layout-Shift verboten).
+- **Disabled:** drei Signale gleichzeitig — Opacity + kein Feedback + `Semantics(enabled: false)`; nie nur Farbe.
+- **Loading:** Inline-Spinner, Höhe kollabiert nicht; Content-Flächen → Skeletons (`skeletonizer`), nicht `CircularProgressIndicator`.
+- **Error:** Farbe + Icon + Helper-Text; Helper-Slot reserviert Höhe (kein Sprung).
+- **Success:** still > Jubel-Toast; kein Konfetti für Routine-Aktionen.
+- **Overlays:** `WidgetStateProperty` — pressed 10 %, hovered 8 %, focused 10 % der Vordergrundfarbe.
+- **Touch:** `MaterialTapTargetSize.padded` (Default) sichert ≥ 48 dp Android.
+- **Scoreboards/Stats:** `FontFeature.tabularFigures()` Pflicht.
+- **Nav:** 4–5 Tabs, Custom-Icons, markenfarbener Active-State — kein generisches Material-Icon-Set als alleinige Icon-Sprache.
+- **Optimistisches UI:** lokalen State sofort updaten; **Undo** statt Bestätigungsdialog.
+
+```dart
+// good — WidgetStateProperty, kein Layout-Shift bei Focus
+ButtonStyle(
+  overlayColor: WidgetStateProperty.resolveWith((states) {
+    if (states.contains(WidgetState.pressed)) return fg.withOpacity(0.10);
+    if (states.contains(WidgetState.hovered)) return fg.withOpacity(0.08);
+    if (states.contains(WidgetState.focused)) return fg.withOpacity(0.10);
+    return null;
+  }),
+)
+
+// bad — Disabled nur über Farbe
+TextButton(
+  onPressed: null,
+  child: Text('Join', style: TextStyle(color: Colors.grey)),
+)
+
+// good — Skeleton statt Full-Screen-Spinner
+Skeletonizer(enabled: isLoading, child: CourtList(courts: courts))
+```

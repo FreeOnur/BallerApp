@@ -1,0 +1,49 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+
+# BallerApp Design Audit (Manual)
+
+Nur per `@50-baller-design-audit-manual` laden. Referenz: `@baller-design-knowledge.md` (§1, §12). **Keine Edits — nur Punch-List.**
+
+Bei Referenz-Nachbau aktiv: `@55-baller-reference-rebuild-manual.mdc` — Audit prüft dann Treue zur Referenz + nicht verhandelbare Gates (A11y, States, Reduced Motion).
+
+## Score 1–5 (je Dimension)
+
+**Philosophy · Hierarchy · Execution · Specificity · Restraint · Variety**. Alles < 3 → überarbeiten.
+
+## Slop-Gate (ein „Ja" = Fail — außer Referenz-Ausnahme in 55)
+
+- [ ] Indigo/Lila/Blau-Verlauf oder zaghafte Palette ohne dominante Farbe?
+- [ ] Inter/Roboto/Arial/Space-Grotesk als Marken-Face, oder eine Font für alles?
+- [ ] Centered-Everything-Hero oder genau drei Feature-Karten?
+- [ ] Identischer Radius + identischer Schatten auf jeder Box?
+- [ ] Glassmorphism / Backdrop-Blur-Deko / verschwommene Blobs?
+- [ ] Emoji als Feature-Icon?
+- [ ] Erfundene Metriken oder SaaS-Floskeln?
+- [ ] Layout-Shift bei Focus oder Error-State?
+- [ ] `disableAnimationsOf` nicht behandelt?
+- [ ] Scroll-Fade auf allem ohne Bedeutung?
+- [ ] Nav/Footer = generischer AI-Fingerabdruck?
+- [ ] Apologetischer Empty-State oder „Oops"-Copy?
+
+## Execution-Gate (immer, auch bei Referenz)
+
+- [ ] Body-Kontrast ≥ 4,5:1? Focus sichtbar?
+- [ ] Touch-Target ≥ 44 pt / 48 dp?
+- [ ] Disabled = Opacity + Feedback + Semantics?
+- [ ] Spacing aus Token-Skala?
+- [ ] Alle interaktiven Widgets: default/hover/focus/pressed/disabled/loading/error/success?
+
+## Output-Format
+
+```
+SCREEN: <name>
+MODE: greenfield | reference-rebuild
+SCORES: Philosophy N · Hierarchy N · Execution N · Specificity N · Restraint N · Variety N
+SLOP: PASS | FAIL (<Grund>)
+PUNCH-LIST:
+1. ...
+```

@@ -10,6 +10,8 @@ alwaysApply: true
 - **Backend**: `backend/app/main.py` FastAPI + PostGIS (`docker-compose.yml` at repo root)
 - **Entry**: `baller_app/lib/main.dart` → `BadwordFilter` → `AuthGate()`
 - **Data layer**: `baller_app/lib/repositories/` · `baller_app/lib/core/api/` (API mode) · legacy `lib/supabase/court_services.dart`
+- **Design**: `baller_app/baller-design-knowledge.md`
+- **CI**: `.github/workflows/pr-quality.yaml` (`peakoss/anti-slop@v0`)
 
 ## Architecture
 

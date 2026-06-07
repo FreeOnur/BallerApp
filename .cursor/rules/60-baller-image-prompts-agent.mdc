@@ -1,0 +1,36 @@
+---
+description: Prompt-Guidelines für BallerApp Marketing-Bilder und App-Mockups — editorial-meets-streetball, Dark-UI, keine AI-Slop-Muster.
+globs:
+alwaysApply: false
+---
+
+# BallerApp Image & Mockup Prompts
+
+Alle Farb-, Typo- und Layout-Tokens: `@baller-design-knowledge.md` (§4, §5, §11). **Keine Werte erfinden** — Akzent-Hex und Display/Body-Faces aus der Wissensdatei übernehmen.
+
+## Prompts müssen enthalten
+
+- **Makrostruktur:** Bento-Grid, Stat-Led, Editorial/Magazine, Marquee-Hero oder Asymmetric Overlap — nie Drei-Karten-Raster.
+- **Marke:** Dark-UI-Default; dominante Asphalt-Grau-Rampe + **ein** scharfer Akzent als Hex (z. B. Signal-Orange `#FC4C02`).
+- **Typo:** condensed Display-Face + neutrales Body; Tabellenziffern für Scores.
+- **Foto:** echte Basketball-Courts, echte Spieler, hartes Naturlicht, Beton/Asphalt-Textur.
+- **Tonalität:** editorial-meets-streetball — brutalist, bold-athletic; nicht SaaS-clean, nicht Neon-Gamer.
+
+## Prompts dürfen niemals anfordern
+
+- „purple gradient", „indigo hero", „Inter font", „Roboto", „three feature cards", „glassmorphism", „floating blobs", „backdrop blur decoration"
+- Centered-Everything-Hero (Eyebrow + H1 + Absatz + ein Button)
+- Generische Studio-Stock-Fotos oder AI-Illustrationen auf Primärflächen
+- Erfundene Metriken in Mockup-Copy
+- Reflexhaft runde Ecken überall, identische weiche Schatten auf allem
+
+## Prompt-Template
+
+```
+BallerApp [screen type] mockup. Dark UI default.
+Layout: [Bento | Stat-Led | Editorial] — asymmetric, one focal point.
+Accent: [Hex from baller-design-knowledge.md]. Asphalt gray ramp surfaces.
+Display type: [condensed athletic face]. Body: [neutral sans]. Tabular figures on scores.
+Photo treatment: real outdoor basketball court, concrete/asphalt, harsh natural light, real players.
+Tone: editorial-meets-streetball, bold athletic. No purple gradients, no Inter, no three-card grid, no glassmorphism.
+```

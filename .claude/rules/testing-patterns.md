@@ -23,3 +23,7 @@ cd baller_app && flutter test
 - DevDep: root `package.json` → `@playwright/test`.
 - Add root `playwright.config.ts` + `e2e/*.spec.ts` before expecting `npx playwright test` to pass.
 - UI MCP: `.cursor/mcp.json` → `browser` server (`@playwright/mcp`).
+
+## CI
+
+- PR gate: `.github/workflows/pr-quality.yaml` — `peakoss/anti-slop@v0` (`max-failures: 4`).
