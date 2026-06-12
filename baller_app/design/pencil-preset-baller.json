@@ -1,0 +1,46 @@
+{
+  "name": "BallerApp",
+  "description": "editorial-meets-streetball — dark default, Signal-Orange #FC4C02, condensed display + neutral body",
+  "canvas": {
+    "width": 390,
+    "height": 844,
+    "note": "Mobile-first; add 1440×900 frames for marketing later"
+  },
+  "tokens": {
+    "color-surface": "#1A1B1E",
+    "color-surface-muted": "#25262B",
+    "color-ink": "#F1F5F9",
+    "color-ink-muted": "#94A3B8",
+    "color-ink-subtle": "#64748B",
+    "color-court": "#FC4C02",
+    "color-success": "#22C55E",
+    "color-warning": "#EAB308",
+    "color-danger": "#EF4444",
+    "color-outline": "rgba(255,255,255,0.08)",
+    "font-display": "Anton",
+    "font-body": "IBM Plex Sans",
+    "font-size-xs": 12,
+    "font-size-sm": 14,
+    "font-size-md": 16,
+    "font-size-lg": 18,
+    "font-size-xl": 24,
+    "font-size-display": 48,
+    "font-size-hero": 72,
+    "spacing-xs": 4,
+    "spacing-sm": 8,
+    "spacing-md": 16,
+    "spacing-lg": 24,
+    "spacing-xl": 32,
+    "spacing-2xl": 48,
+    "spacing-section": 96,
+    "radius-sharp": 4,
+    "radius-md": 8,
+    "radius-pill": 9999,
+    "touch-min": 48
+  },
+  "scaffold": {
+    "headerHeight": 56,
+    "bottomNavHeight": 64,
+    "contentPadding": 16
+  }
+}

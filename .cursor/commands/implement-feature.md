@@ -1,38 +1,25 @@
 # Implement Feature
 
-You are responsible for implementing an existing feature from the user stories.
+Implement a feature from user stories using current BallerApp architecture.
 
-Steps:
+## Before coding
 
-1. Read the following project files:
-   - project/architecture.md
-   - project/tech_stack.md
-   - project/user_stories.md
-   - project/product.md
-2. Don't break the rules written in the folder:
-   - rules
-3. Identify the feature that the user requested.
+1. Read `.cursor/project/architecture.md`, `tech_stack.md`, `product.md`, `user_stories.md`.
+2. Read `.cursor/workflow.md` and relevant rules (especially `repositories.mdc`, `adr-0008`).
+3. Load matching skill if applicable (`repository-layer`, `fastapi-router`, `auth-flow`, etc.).
+4. For UI: read `baller_app/baller-design-knowledge.md`; apply Baller token rules.
 
-4. Analyze the existing codebase.
+## Implementation
 
-5. Implement the feature following the architecture and coding standards.
+1. Identify the requested feature in `user_stories.md`.
+2. Trace existing code — extend, don't duplicate.
+3. **Data:** Repository interface + provider; backend router if API mode.
+4. **UI:** Pages/widgets only; state via Riverpod Notifiers.
+5. **Errors:** Brand voice; no raw exception strings to users.
+6. Run `cd baller_app && flutter analyze` (Dart changes).
 
-6. Ensure the implementation includes:
+## After
 
-- UI components
-- business logic
-- API integration if needed
-- state management
-- error handling
-
-7. Follow the project's Flutter architecture and best practices.
-
-8. Optimize performance when possible.
-
-9. After implementation:
-
-Provide a summary with:
-
-- Files created
-- Files modified
-- Next steps
+- Security checklist: `.cursor/ai/security/security_checks.md`
+- Append `.cursor/ai/changes/changelog.md`
+- Summary: files created/modified, next steps

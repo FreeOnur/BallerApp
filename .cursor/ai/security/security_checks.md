@@ -1,64 +1,60 @@
-# Security Checks — Baller App
+# Security Checks — BallerApp
 
-Use this as a checklist when adding or changing code. AI and developers should run through it before considering a change complete.
+Use before considering a change complete. Cross-check with `.cursor/rules/security-baseline.mdc`, `auth-conventions.mdc`, and `.cursor/skills/security-hardening/SKILL.md`.
 
 ---
 
-## Automatic Security Review Template
-
-When completing a task, fill this template (append to this file or keep in mind):
+## Quick template
 
 ```markdown
 ## Security Review — [Date / Change summary]
 
-- [ ] **Auth** — User id from session only; no client-supplied user ids for ownership
-- [ ] **Input validation** — All user inputs validated/sanitized before use or send
-- [ ] **Secrets** — No keys/tokens in source; env or secure config only
-- [ ] **RLS / API auth** — Legacy: Supabase RLS + auth.uid(); Self-hosted: API enforces user id from JWT only
-- [ ] **Backend** — Postgres not public; JWT secret strong; Argon2 passwords; Caddy TLS in prod
-- [ ] **Async safety** — Errors handled; no uncaught Futures; no sensitive data in error messages
-- [ ] **Logging** — No tokens, PII, or full request/response in logs
-- [ ] **HTTPS** — No plain HTTP for API or auth
+- [ ] **Auth** — User id from session/JWT only; no client-supplied ids for ownership
+- [ ] **Input validation** — Server-side validation in API/RPC; client validation is UX only
+- [ ] **Secrets** — No keys/tokens in source; `--dart-define` / `.env` only
+- [ ] **Authz** — Legacy: Supabase RLS + `auth.uid()`; API mode: JWT in `dependencies.py`, fail closed
+- [ ] **Backend** — Argon2id passwords; short JWT TTL; refresh tokens hashed; CORS restricted in prod
+- [ ] **Async safety** — Errors handled; no sensitive data in user-facing error strings
+- [ ] **Logging** — No tokens, PII, or full bodies in logs (user IDs only)
+- [ ] **HTTPS** — No plain HTTP for API or auth in production
+- [ ] **Uploads** — Presigned URLs only; validate mime/size server-side
 ```
 
 ---
 
-## 1. Input Validation
+## 1. Input validation
 
-- Validate and sanitize every user input (text fields, file uploads, query params).
-- Use allowlists for fixed sets of values; avoid passing raw user strings into queries or storage keys.
-- Reject empty/whitespace-only where content is required.
+- Validate and sanitize every user input (text, uploads, query params).
+- Allowlists for fixed sets; length caps on free text.
+- FastAPI: Pydantic models + server-side checks in routers/RPCs.
 
-## 2. Safe Async Handling
+## 2. Auth and authorization
 
-- Every `Future`/async call must have error handling (try/catch or .catchError).
-- Do not expose internal errors or stack traces to the user in production.
-- Prefer typed results (e.g. Result types) over throwing in public APIs.
+- **API mode:** `ApiAuthRepository` + `TokenStorage` (secure storage); refresh via `POST /auth/refresh`.
+- **Legacy:** Supabase session via `onAuthStateChange`; RLS on every table.
+- Sensitive ops (delete account, change email) require recent re-auth.
 
-## 3. No Secrets in Code
+## 3. No secrets in code
 
-- No Supabase URL, anon key, or service role key hardcoded.
-- Use environment variables or `flutter_dotenv` / build-time config; do not commit `.env`.
-- If keys exist in repo today, plan migration to env and document in project_context.
+- No Supabase service role, JWT secret, or B2 keys in client or committed files.
+- `.env` in `.gitignore`; Flutter via `--dart-define`.
 
-## 4. Supabase RLS Awareness
+## 4. Data access boundaries
 
-- Assume Row Level Security is enabled on all tables.
-- Queries must be written so they work under RLS (e.g. filter by `auth.uid()`).
-- Never use service role in client app; no bypassing RLS from the app.
+- No `Supabase.instance.client.from(...)` in widgets — use repositories.
+- Service-role key never in Flutter app.
 
-## 5. Safe Auth Usage
+## 5. Safe async and errors
 
-- Auth state and user id come only from Supabase session (e.g. `Supabase.instance.client.auth`).
-- Do not trust user id or role from client payloads; derive from session in backend/services.
-- Sign-out and token refresh handled via Supabase client; do not store tokens in plain text.
+- Typed errors with context; `AsyncValue.error` preserves stack in Riverpod.
+- Never silently swallow exceptions.
 
-## 6. Prevent Unsafe Logging
+## 6. Logging and PII
 
-- Do not log: auth tokens, passwords, full request/response bodies, PII.
-- Do not print or debugPrint sensitive data; strip or redact in development if needed.
-- See also: `.cursor/rules/09_logging_rules.md`.
+- Log user UUIDs, not names/emails/locations.
+- No `print()` in production — `dart:developer` `log()`.
 
----
+## 7. Infrastructure (prod)
 
-Reference: `.cursor/rules/06_security_rules.md` for day-to-day security rules.
+- TLS at reverse proxy; Postgres not public; rate-limit auth endpoints.
+- See `docker-compose-hetzner` skill for deploy checklist.

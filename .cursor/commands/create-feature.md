@@ -1,48 +1,24 @@
 # Create Feature
 
-You are responsible for creating a new feature proposal for the project.
+Propose a new feature aligned with BallerApp product and architecture.
 
-Steps:
+## Steps
 
-1. Read the following project files:
-   - project/vision.md
-   - project/product.md
-   - project/roadmap.md
-   - project/user_stories.md
-   - project/architecture.md
+1. Read `.cursor/project/vision.md`, `product.md`, `roadmap.md`, `user_stories.md`, `architecture.md`.
+2. Check ADRs in `.cursor/rules/` (especially repository pattern, FastAPI backend).
+3. Draft the proposal:
 
-2. Understand the purpose of the app and the existing features.
+**Feature Name**
 
-3. Generate a new feature proposal.
+**Problem:** What user pain does this solve?
 
-4. Create the following sections:
+**User Story:** As a … I want … So that …
 
-Feature Name
+**Acceptance Criteria:** When … / Users can …
 
-Problem:
-Explain what problem this feature solves.
+**Technical Design:** Repository + API route (if needed) + Flutter screens. No direct Supabase in widgets.
 
-User Story:
-As a [type of user]
-I want [goal]
-So that [benefit]
+**Implementation Tasks:** Numbered, small PR-sized steps.
 
-Acceptance Criteria:
-
-- When ...
-- When ...
-- When ...
-- Users can ...
-
-Technical Design:
-Explain briefly how the feature should work technically.
-
-Implementation Tasks:
-
-- Task 1
-- Task 2
-- Task 3
-
-5. Append the new feature to:
-
-project/user_stories.md
+4. Append to `.cursor/project/user_stories.md` (or output for user to paste).
+5. Note any security or design implications (tokens, auth, map/location).

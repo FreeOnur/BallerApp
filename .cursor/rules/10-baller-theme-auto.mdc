@@ -1,12 +1,12 @@
 ---
 description:
-globs: baller_app/lib/theme/**, baller_app/**/*theme*.dart
+globs: baller_app/lib/theme/**, baller_app/lib/design_system/**, baller_app/**/*theme*.dart
 alwaysApply: false
 ---
 
 # BallerApp Theme & Tokens
 
-Alle Werte aus `@baller-design-knowledge.md` (§4 Farbe, §3 Typo, §5 Spacing, §6 Schatten/Radius, §7 Motion, §8 Flutter-Theming). OKLCH entwerfen, als Hex ausliefern.
+Alle Werte aus `@baller_app/DESIGN.md` · `@baller-design-knowledge.md` (§4 Farbe, §3 Typo, §5 Spacing, §6 Schatten/Radius, §7 Motion, §8 Flutter-Theming). OKLCH entwerfen, als Hex ausliefern.
 
 ## Architektur (Pflicht)
 

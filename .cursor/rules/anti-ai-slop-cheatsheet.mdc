@@ -1,6 +1,6 @@
 ---
 description: The single most important design reference. Refuse anything matching these patterns. Run on every DESIGN response.
-globs: baller_app/**/*.dart, design/**/*
+globs: baller_app/**/*.dart, baller_app/design/**/*
 alwaysApply: false
 ---
 

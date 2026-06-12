@@ -8,7 +8,7 @@ alwaysApply: true
 
 **BallerApp** — Flutter (Android + iOS), Pickup-Basketball: Courts auf Karte, Spieler verbinden; später Ranked Games + Info-Marketing-Site. **Custom Design System**, Dark-Default, Tonalität **editorial-meets-streetball**. Kein Material-Default-Look, kein AI-Slop.
 
-**Source of Truth:** `@baller-design-knowledge.md` — alle Tokens dort nachlesen. **Keine Werte erfinden.**
+**Source of Truth:** `@baller_app/DESIGN.md` · `@baller-design-knowledge.md` — alle Tokens dort nachlesen. **Keine Werte erfinden.**
 
 ## Harte Verbote (Default)
 

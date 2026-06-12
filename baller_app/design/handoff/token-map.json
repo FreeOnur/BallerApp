@@ -1,0 +1,19 @@
+{
+  "$comment": "Pencil variable name → Flutter token path. Keep in sync with pencil-preset-baller.json and lib/design_system/tokens/",
+  "color-surface": "BallerColors.surface",
+  "color-surface-muted": "BallerColors.surfaceMuted",
+  "color-ink": "BallerColors.ink",
+  "color-ink-muted": "BallerColors.inkMuted",
+  "color-ink-subtle": "BallerColors.inkSubtle",
+  "color-court": "BallerColors.court",
+  "color-success": "BallerColors.success",
+  "color-warning": "BallerColors.warning",
+  "color-danger": "BallerColors.danger",
+  "color-outline": "BallerColors.outline",
+  "font-display": "BallerType.displayFontFamily",
+  "font-body": "BallerType.bodyFontFamily",
+  "spacing-md": "BallerSpacing.md",
+  "spacing-lg": "BallerSpacing.lg",
+  "radius-sharp": "BallerRadius.sharp",
+  "radius-pill": "BallerRadius.pill"
+}

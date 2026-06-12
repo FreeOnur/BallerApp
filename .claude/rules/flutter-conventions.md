@@ -8,7 +8,7 @@ paths:
 ## Widgets
 
 - Async shell pattern: `baller_app/lib/auth/auth_gate.dart` (loading + error branches).
-- Theme: `app_colors.dart` · `app_spacing.dart` · `app_sizes` — no inline `Color(0xFF...)`.
+- Theme: `baller_app/lib/design_system/` · legacy `app_colors.dart` · `app_spacing.dart` · `app_sizes` — no inline `Color(0xFF...)`.
 - Package imports: `package:baller_app/...` from `pubspec.yaml` name `baller_app`.
 
 ## Data access

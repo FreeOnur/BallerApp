@@ -1,0 +1,28 @@
+{
+  "name": "BallerApp",
+  "description": "Claude Design onboarding — editorial-meets-streetball, dark, #FC4C02, Anton + IBM Plex Sans",
+  "platform": "mobile",
+  "frame": {
+    "width": 390,
+    "height": 844
+  },
+  "tokens": {
+    "color-surface": "#1A1B1E",
+    "color-surface-muted": "#25262B",
+    "color-ink": "#F1F5F9",
+    "color-ink-muted": "#94A3B8",
+    "color-ink-subtle": "#64748B",
+    "color-court": "#FC4C02",
+    "color-success": "#22C55E",
+    "color-warning": "#EAB308",
+    "color-danger": "#EF4444",
+    "color-outline": "rgba(255,255,255,0.08)",
+    "font-display": "Anton",
+    "font-body": "IBM Plex Sans",
+    "spacing-md": 16,
+    "spacing-lg": 24,
+    "radius-sharp": 4,
+    "radius-pill": 9999,
+    "touch-min": 48
+  }
+}

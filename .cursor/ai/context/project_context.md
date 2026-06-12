@@ -1,30 +1,41 @@
-# Project Context — Baller App
+# Project Context — BallerApp
 
 Brief context for AI and developers. Update when architecture or conventions change.
 
 ## Stack
 
-- **Flutter** (SDK ^3.9.0), **Supabase** (auth + backend)
-- **Packages:** supabase_flutter, image_picker, http, dio, google_maps_flutter, geolocator, shared_preferences, url_launcher
+- **Flutter** (SDK ^3.9.0) — `baller_app/`
+- **Backend (target):** FastAPI + PostgreSQL/PostGIS — `backend/` · `docker-compose.yml` at repo root
+- **Legacy (cutover):** Supabase when `USE_LEGACY_SUPABASE=true`
+- **Storage:** Backblaze B2 presign (`POST /uploads/presign`)
+- **Maps / location:** `google_maps_flutter`, `geolocator` via `LocationService`
+- **CI:** `peakoss/anti-slop@v0` on PR open/reopen
 
 ## Structure
 
-- `lib/auth/` — authentication (e.g. AuthGate)
-- `lib/pages/` — full-screen UI only; no direct backend calls
-- `lib/widgets/` — reusable UI (buttons, text fields, popups)
-- `lib/services/` — business logic, HTTP, validation
-- `lib/supabase/` — Supabase client usage (e.g. CourtServices); called via services or from pages via services
-- `lib/models/` — data models (fromJson/toJson, no logic)
-- `lib/theme/` — colors, spacing, sizes
+| Layer | Path |
+|-------|------|
+| Entry | `baller_app/lib/main.dart` → `AuthGate()` |
+| Auth | `lib/auth/` · `lib/repositories/*_auth_repository.dart` |
+| API client | `lib/core/api/api_client.dart` · `token_storage.dart` |
+| Repositories | `lib/repositories/` — **all new data access here** |
+| Pages / widgets | `lib/pages/` · `lib/widgets/` — no direct Supabase/API |
+| Models | `lib/models/` — `fromMap` / Freezed, no business logic |
+| Theme / design | `lib/theme/` · **`baller_app/baller-design-knowledge.md`** |
+| Backend | `backend/app/routers/` · `migrations/` |
+| Legacy Supabase | `lib/supabase/` — only when legacy flag is on |
 
 ## Conventions
 
-- Pages and widgets do not call Supabase or API directly; they use services.
-- Auth: use Supabase session only; no hardcoded user ids.
-- Secrets: move to env/build config (see `.cursor/ai/security/security_checks.md`).
-- Rules: `.cursor/rules/00_global_rules.md` through `10_performance_rules.md`; lower number wins on conflict.
+- Repository pattern enforced (ADR-0008): Widget → Notifier → Repository → API/Supabase.
+- Auth: session/JWT only; never trust client-supplied user ids for ownership.
+- Secrets: `--dart-define` or `backend/.env`; never commit keys.
+- Design: custom design system, dark default, editorial-streetball — see Baller tokens + Hallmark for web/marketing.
+- Rules: `.cursor/rules/` (`.mdc`); always-on: `global.mdc`, `00-baller-tokens-always.mdc`.
+- Workflow: `.cursor/workflow.md`
 
 ## AI Workflow
 
-Before coding: read rules, analyze existing code, plan minimal change.
-After coding: update this changelog (`.cursor/ai/changes/changelog.md`), append prompt history (`.cursor/ai/prompts/prompt_history.md`), run security checklist (`.cursor/ai/security/security_checks.md`).
+Before coding: read project context, relevant rules/skills, analyze existing code, plan minimal change.
+
+After coding: security checklist, changelog, prompt history (if significant), `flutter analyze`, conventional commit.

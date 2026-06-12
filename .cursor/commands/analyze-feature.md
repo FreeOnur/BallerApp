@@ -1,12 +1,16 @@
 # Analyze Feature
 
-Analyze the selected feature.
+Review the selected feature or code area. **Report only — no edits** unless the user asks.
 
-Steps:
+## Checklist
 
-1. Identify potential bugs
-2. Identify performance issues
-3. Identify security issues
-4. Suggest improvements
+1. **Correctness** — Bugs, edge cases, null/async races.
+2. **Architecture** — Repository pattern respected? Right layer for logic?
+3. **Security** — `.cursor/ai/security/security_checks.md` (auth, validation, secrets, RLS/JWT).
+4. **Performance** — `performance-checklist.mdc`; unnecessary rebuilds, N+1 calls.
+5. **Design** (UI) — Tokens from `baller-design-knowledge.md`; slop patterns from `anti-ai-slop-cheatsheet.mdc`.
+6. **Tests** — Coverage gaps for critical paths.
 
-Provide a clear report.
+## Output
+
+Structured report: findings by severity, file references, suggested fixes (no implementation unless requested).

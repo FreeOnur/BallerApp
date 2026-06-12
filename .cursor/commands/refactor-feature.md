@@ -1,14 +1,21 @@
 # Refactor Feature
 
-Analyze the selected feature and improve the code.
+Improve the selected feature without changing behavior unless explicitly requested.
 
-Goals:
+## Goals
 
-- improve readability
-- improve performance
-- reduce API calls
-- follow Flutter best practices
-- remove unnecessary rebuilds
-- improve architecture
+- Match `clean-code-checklist.mdc` and `flutter-conventions.mdc`
+- Enforce repository pattern — move stray SDK calls behind repositories
+- Reduce widget rebuilds; use Riverpod `select()` where helpful
+- Remove duplication; keep diffs minimal
 
-Provide a summary of improvements.
+## Process
+
+1. Read surrounding code and `.cursor/project/architecture.md`.
+2. Plan smallest safe refactor; avoid drive-by changes.
+3. Preserve public APIs unless user approved breaking changes.
+4. Run `flutter analyze` after Dart edits.
+
+## Output
+
+Summary: what improved, files touched, any follow-up risks.

@@ -8,7 +8,7 @@ alwaysApply: false
 
 - Prefer `StatefulWidget` + private `State` for data-bound UI; load async work in `initState`.
 - Async shell: `baller_app/lib/auth/auth_gate.dart` (loading / error / empty branches).
-- Theme: `app_colors.dart` · `app_spacing.dart` · `app_sizes` — use `AppColors` / `AppSpacing`.
+- Theme: `baller_app/lib/design_system/` · legacy `baller_app/lib/theme/app_colors.dart` · `app_spacing.dart` · `app_sizes` — use `AppColors` / `AppSpacing`.
 
 ## Models (`baller_app/lib/models/`)
 

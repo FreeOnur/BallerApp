@@ -1,6 +1,6 @@
 ---
 description:
-globs: baller_app/lib/pages/**, baller_app/lib/screens/**, baller_app/lib/widgets/**
+globs: baller_app/lib/pages/**, baller_app/lib/screens/**, baller_app/lib/widgets/**, baller_app/lib/design_system/**
 alwaysApply: false
 ---
 

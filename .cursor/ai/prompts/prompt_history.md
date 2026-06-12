@@ -2,7 +2,7 @@
 
 Append a short summary after each significant AI-assisted change.
 
-Format (append below):
+Format:
 
 ---
 
@@ -12,8 +12,14 @@ Format (append below):
 
 ---
 
-**2025-02-20** — Audit and complete AI rule system, security, memory, workflow
+**2026-06-07** — Update workflow.md, commands, and ai/ folder for new rules stack
 
-- Added missing 01_architecture_rules, 05_model_rules; aligned 07 to lib/supabase; expanded 06, 09, security_checks; created workflow.md, ai/prompts, ai/changes, ai/context and memory files.
+- Removed stale rule references; added Baller tokens, Hallmark/PencilPlaybook, repository/FastAPI paths; deleted duplicate `refactor.md` command; refreshed security checklist for API mode.
+
+---
+
+**2025-02-20** — Audit and complete AI rule system
+
+- Added architecture/model rules; expanded security checks; created workflow and ai/ memory files.
 
 ---
